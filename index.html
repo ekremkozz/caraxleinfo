@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,8 +17,6 @@
     --text2: #8b90a8;
     --text3: #555a72;
     --green: #3ecf8e;
-    --amber: #f59e0b;
-    --red: #f43f5e;
     --radius: 10px;
     --radius-lg: 14px;
   }
@@ -32,7 +30,6 @@
     min-height: 100vh;
   }
 
-  /* TOP BAR */
   header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -54,14 +51,9 @@
     font-weight: 600;
     letter-spacing: -0.3px;
   }
-
   .logo svg { color: var(--accent); }
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .header-right { display: flex; align-items: center; gap: 10px; }
 
   .btn-ghost {
     display: flex;
@@ -89,7 +81,6 @@
   }
   .stat-pill span { color: var(--accent); font-weight: 600; }
 
-  /* FILTERS */
   .filter-bar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -105,7 +96,6 @@
     flex: 1;
     min-width: 200px;
   }
-
   .search-wrap svg {
     position: absolute;
     left: 11px;
@@ -125,10 +115,12 @@
     outline: none;
     transition: border-color .15s;
   }
-
   input[type="text"] { padding-left: 34px; width: 100%; }
   input[type="text"]:focus, select:focus { border-color: var(--accent); }
-  select { cursor: pointer; padding-right: 28px; appearance: none;
+  select {
+    cursor: pointer;
+    padding-right: 28px;
+    appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b90a8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
@@ -141,7 +133,6 @@
     white-space: nowrap;
   }
 
-  /* GRID */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -149,7 +140,6 @@
     padding: 24px;
   }
 
-  /* CARD */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -168,13 +158,7 @@
     overflow: hidden;
     position: relative;
   }
-
-  .card-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
+  .card-img img { width: 100%; height: 100%; object-fit: cover; }
   .card-img .placeholder {
     display: flex;
     flex-direction: column;
@@ -210,27 +194,13 @@
   .car-meta {
     font-size: 12px;
     color: var(--text2);
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     display: flex;
     align-items: center;
     gap: 6px;
   }
-
   .car-meta .dot { color: var(--text3); }
 
-  .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
-  .tag {
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 999px;
-    font-weight: 500;
-  }
-  .tag-blue { background: rgba(79,142,247,0.12); color: #7eb3ff; border: 1px solid rgba(79,142,247,0.2); }
-  .tag-amber { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
-  .tag-green { background: rgba(62,207,142,0.12); color: #6ee7b7; border: 1px solid rgba(62,207,142,0.2); }
-  .tag-purple { background: rgba(124,92,252,0.12); color: #a78bfa; border: 1px solid rgba(124,92,252,0.2); }
-
-  /* MEASUREMENTS */
   .measures-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -244,6 +214,30 @@
     border-radius: 8px;
     padding: 8px 10px;
   }
+  .measure.front { border-left: 2px solid var(--accent); }
+  .measure.rear  { border-left: 2px solid var(--accent2); }
+  .measure.wb    { grid-column: span 2; border-left: 2px solid var(--green); }
+
+  .measures-section-label {
+    font-size: 10px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .measures-section-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .measures-section-label.front::before { background: var(--accent); }
+  .measures-section-label.rear::before  { background: var(--accent2); }
+  .measures-section-label.wb::before    { background: var(--green); }
 
   .measure-label {
     font-size: 10px;
@@ -259,7 +253,6 @@
     font-variant-numeric: tabular-nums;
     color: var(--text);
   }
-
   .measure-val .unit {
     font-size: 10px;
     font-weight: 400;
@@ -267,28 +260,8 @@
     margin-left: 2px;
   }
 
-  .measure.front { border-left: 2px solid var(--accent); }
-  .measure.rear  { border-left: 2px solid var(--accent2); }
-  .measure.wb    { border-left: 2px solid var(--green); grid-column: span 2; }
-
-  /* AX LEGEND */
-  .ax-legend {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-    font-size: 10px;
-    color: var(--text3);
-  }
-  .ax-legend span { display: flex; align-items: center; gap: 4px; }
-  .dot-blue { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-  .dot-purple { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); }
-  .dot-green { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
-
-  /* BUTTONS */
-  .card-actions { display: flex; gap: 8px; }
-
   .btn-scad {
-    flex: 1;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -305,28 +278,8 @@
   }
   .btn-scad:hover { opacity: .9; }
   .btn-scad:active { transform: scale(.97); }
-  .btn-scad.copied {
-    background: linear-gradient(135deg, var(--green), #059669);
-  }
+  .btn-scad.copied { background: linear-gradient(135deg, var(--green), #059669); }
 
-  .btn-raw {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 12px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    color: var(--text2);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all .15s;
-    white-space: nowrap;
-  }
-  .btn-raw:hover { background: var(--surface2); color: var(--text); border-color: var(--accent); }
-  .btn-raw.copied { color: var(--green); border-color: var(--green); }
-
-  /* EMPTY STATE */
   .empty {
     grid-column: 1/-1;
     display: flex;
@@ -340,7 +293,6 @@
   .empty svg { opacity: .3; }
   .empty p { font-size: 14px; }
 
-  /* CONTRIBUTE BANNER */
   .contribute {
     margin: 0 24px 24px;
     background: linear-gradient(135deg, rgba(79,142,247,0.08), rgba(124,92,252,0.08));
@@ -356,7 +308,6 @@
   .contribute-text { font-size: 13px; color: var(--text2); }
   .contribute-text strong { color: var(--text); }
 
-  /* TOAST */
   .toast {
     position: fixed;
     bottom: 24px;
@@ -399,8 +350,8 @@
     1/64 Stand Builder
   </div>
   <div class="header-right">
-    <div class="stat-pill">Toplam: <span id="total-count">0</span> araç</div>
-    <a href="https://github.com" target="_blank" class="btn-ghost">
+    <div class="stat-pill">Total: <span id="total-count">0</span> cars</div>
+    <a href="https://github.com/ekremkozz/caraxleinfo" target="_blank" class="btn-ghost">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
       GitHub
     </a>
@@ -412,31 +363,28 @@
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
     </svg>
-    <input type="text" id="search" placeholder="Araç adı veya marka ara...">
+    <input type="text" id="search" placeholder="Search by name, brand or code...">
   </div>
+  <select id="filter-manufacturer">
+    <option value="">All manufacturers</option>
+  </select>
   <select id="filter-brand">
-    <option value="">Tüm üreticiler</option>
+    <option value="">All car brands</option>
   </select>
-  <select id="filter-year">
-    <option value="">Tüm yıllar</option>
-  </select>
-  <select id="filter-series">
-    <option value="">Tüm seriler</option>
-  </select>
-  <div class="filter-count" id="filter-count">0 araç gösteriliyor</div>
+  <div class="filter-count" id="filter-count">0 cars</div>
 </div>
 
 <div class="grid" id="grid"></div>
 
 <div class="contribute">
   <div class="contribute-text">
-    <strong>Aracınızın ölçülerini biliyor musunuz?</strong> Veri tabanına katkıda bulunmak için ölçülerinizi gönderin.
+    <strong>Know your car's measurements?</strong> Submit your data to help grow the database.
   </div>
-  <a href="mailto:?subject=1/64%20Stand%20Builder%20-%20Araç%20Ölçüleri" class="btn-ghost">
+  <a href="mailto:?subject=1/64%20Stand%20Builder%20-%20Car%20Measurements" class="btn-ghost">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
-    Ölçü Gönder
+    Submit Measurements
   </a>
 </div>
 
@@ -444,23 +392,23 @@
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
     <path d="M20 6 9 17l-5-5"/>
   </svg>
-  <span id="toast-msg">Kopyalandı!</span>
+  <span id="toast-msg">Copied!</span>
 </div>
 
 <script>
 // ============================================================
-// VERİ TABANI — Yeni araç eklemek için bu diziye nesne ekleyin
+// DATABASE — Add new cars to this array
 // ============================================================
 const CARS = [
   {
     id: 1,
     name: "1983 Porsche 928S",
-    brand: "Hot Wheels",
+    manufacturer: "Hot Wheels",  // Model manufacturer (Hot Wheels, Mini GT, etc.)
+    carBrand: "Porsche",         // Real car brand
     series: "Mainline",
     year: 2025,
     code: "HYW53",
-    tags: ["Muscle Mania"],
-    image: "", // Görsel yolu veya URL — boş bırakılırsa placeholder gösterilir
+    image: "",
     measurements: {
       wheelbase: 42.0,
       front_wheel_diameter: 12.4,
@@ -474,11 +422,11 @@ const CARS = [
   {
     id: 2,
     name: "Triumph TR6",
-    brand: "Hot Wheels",
+    manufacturer: "Hot Wheels",
+    carBrand: "Triumph",
     series: "Mainline",
     year: 2025,
     code: "JBC34",
-    tags: ["HW Track Champs", "Treasure Hunt"],
     image: "",
     measurements: {
       wheelbase: 39.5,
@@ -493,11 +441,11 @@ const CARS = [
   {
     id: 3,
     name: "Polestar TRX",
-    brand: "Hot Wheels",
+    manufacturer: "Hot Wheels",
+    carBrand: "Polestar",
     series: "Mainline",
     year: 2025,
     code: "HYW29",
-    tags: ["Peak Pursuit", "Polestar"],
     image: "",
     measurements: {
       wheelbase: 41.0,
@@ -512,11 +460,11 @@ const CARS = [
   {
     id: 4,
     name: "Ford RS200",
-    brand: "Hot Wheels",
+    manufacturer: "Hot Wheels",
+    carBrand: "Ford",
     series: "Mainline",
     year: 2025,
     code: "JBC49",
-    tags: ["Peak Pursuit", "Super Treasure Hunt"],
     image: "",
     measurements: {
       wheelbase: 40.5,
@@ -531,20 +479,7 @@ const CARS = [
 ];
 
 // ============================================================
-// TAG RENKLERİ
-// ============================================================
-const TAG_COLORS = {
-  "Treasure Hunt":       "tag-amber",
-  "Super Treasure Hunt": "tag-amber",
-  "Muscle Mania":        "tag-blue",
-  "HW Track Champs":     "tag-blue",
-  "Peak Pursuit":        "tag-green",
-  "Polestar":            "tag-purple",
-};
-function tagClass(tag) { return TAG_COLORS[tag] || "tag-blue"; }
-
-// ============================================================
-// SCAD ÇIKTI OLUŞTURUCU
+// SCAD OUTPUT BUILDER
 // ============================================================
 function buildScad(car) {
   const m = car.measurements;
@@ -558,21 +493,8 @@ rear_wheel_width = ${m.rear_wheel_width};
 rear_wheels_inner_distance = ${m.rear_wheels_inner_distance};`;
 }
 
-// Tüm ham ölçüler (insanın okuyabileceği format)
-function buildRaw(car) {
-  const m = car.measurements;
-  return `=== ${car.name} (${car.brand} ${car.code}) ===
-Dingil Mesafesi:          ${m.wheelbase} mm
-Ön Teker Çapı:            ${m.front_wheel_diameter} mm
-Ön Teker Genişliği:       ${m.front_wheel_width} mm
-Ön Teker İç Mesafesi:     ${m.front_wheels_inner_distance} mm
-Arka Teker Çapı:          ${m.rear_wheel_diameter} mm
-Arka Teker Genişliği:     ${m.rear_wheel_width} mm
-Arka Teker İç Mesafesi:   ${m.rear_wheels_inner_distance} mm`;
-}
-
 // ============================================================
-// KOPYALAMA + TOAST
+// COPY + TOAST
 // ============================================================
 let toastTimer;
 function showToast(msg) {
@@ -587,33 +509,20 @@ function copyScad(id) {
   const car = CARS.find(c => c.id === id);
   if (!car) return;
   navigator.clipboard.writeText(buildScad(car));
-  showToast("SCAD parametreleri kopyalandı — MakerWorld'e yapıştırın!");
+  showToast("SCAD parameters copied — paste into MakerWorld!");
   const btn = document.querySelector(`[data-scad="${id}"]`);
   if (btn) {
     btn.classList.add("copied");
-    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Kopyalandı!`;
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Copied!`;
     setTimeout(() => {
       btn.classList.remove("copied");
-      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> SCAD Kopyala`;
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy SCAD`;
     }, 2000);
   }
 }
 
-function copyRaw(id) {
-  const car = CARS.find(c => c.id === id);
-  if (!car) return;
-  navigator.clipboard.writeText(buildRaw(car));
-  showToast("Ölçüler kopyalandı!");
-  const btn = document.querySelector(`[data-raw="${id}"]`);
-  if (btn) {
-    btn.classList.add("copied");
-    btn.textContent = "✓";
-    setTimeout(() => { btn.classList.remove("copied"); btn.textContent = "Ham"; }, 2000);
-  }
-}
-
 // ============================================================
-// KART OLUŞTURUCU
+// CARD RENDERER
 // ============================================================
 function renderCard(car) {
   const m = car.measurements;
@@ -625,120 +534,106 @@ function renderCard(car) {
           <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3m0 0h3l3 3v4h-2"/>
           <circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>
         </svg>
-        <span>Görsel yok</span>
+        <span>No image</span>
       </div>`;
-
-  const tagsHtml = car.tags.map(t =>
-    `<span class="tag ${tagClass(t)}">${t}</span>`
-  ).join("");
 
   return `
   <div class="card">
     <div class="card-img">
       ${imgHtml}
-      <div class="brand-badge">${car.brand}</div>
+      <div class="brand-badge">${car.manufacturer}</div>
     </div>
     <div class="card-body">
       <div class="car-name">${car.name}</div>
       <div class="car-meta">
-        ${car.series} <span class="dot">·</span> ${car.year} <span class="dot">·</span> ${car.code}
-      </div>
-      <div class="tags">${tagsHtml}</div>
-
-      <div class="ax-legend">
-        <span><div class="dot-blue"></div> Ön</span>
-        <span><div class="dot-purple"></div> Arka</span>
-        <span><div class="dot-green"></div> Dingil</span>
+        ${car.carBrand}${car.code ? ` <span class="dot">·</span> ${car.code}` : ''}
       </div>
 
       <div class="measures-grid">
+        <div class="measure wb">
+          <div class="measure-label">Wheelbase</div>
+          <div class="measure-val">${m.wheelbase}<span class="unit">mm</span></div>
+        </div>
         <div class="measure front">
-          <div class="measure-label">Ön Çap</div>
+          <div class="measure-label">Front Diameter</div>
           <div class="measure-val">${m.front_wheel_diameter}<span class="unit">mm</span></div>
         </div>
-        <div class="measure front">
-          <div class="measure-label">Ön Genişlik</div>
-          <div class="measure-val">${m.front_wheel_width}<span class="unit">mm</span></div>
+        <div class="measure rear">
+          <div class="measure-label">Rear Diameter</div>
+          <div class="measure-val">${m.rear_wheel_diameter}<span class="unit">mm</span></div>
         </div>
         <div class="measure front">
-          <div class="measure-label">Ön İç Mesafe</div>
+          <div class="measure-label">Front Width</div>
+          <div class="measure-val">${m.front_wheel_width}<span class="unit">mm</span></div>
+        </div>
+        <div class="measure rear">
+          <div class="measure-label">Rear Width</div>
+          <div class="measure-val">${m.rear_wheel_width}<span class="unit">mm</span></div>
+        </div>
+        <div class="measure front">
+          <div class="measure-label">Front Inner Gap</div>
           <div class="measure-val">${m.front_wheels_inner_distance}<span class="unit">mm</span></div>
         </div>
         <div class="measure rear">
-          <div class="measure-label">Arka Çap</div>
-          <div class="measure-val">${m.rear_wheel_diameter}<span class="unit">mm</span></div>
-        </div>
-        <div class="measure rear">
-          <div class="measure-label">Arka Genişlik</div>
-          <div class="measure-val">${m.rear_wheel_width}<span class="unit">mm</span></div>
-        </div>
-        <div class="measure rear">
-          <div class="measure-label">Arka İç Mesafe</div>
+          <div class="measure-label">Rear Inner Gap</div>
           <div class="measure-val">${m.rear_wheels_inner_distance}<span class="unit">mm</span></div>
-        </div>
-        <div class="measure wb">
-          <div class="measure-label">Dingil Mesafesi (Wheelbase)</div>
-          <div class="measure-val">${m.wheelbase}<span class="unit">mm</span></div>
         </div>
       </div>
 
-      <div class="card-actions">
-        <button class="btn-scad" data-scad="${car.id}" onclick="copyScad(${car.id})">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2"/>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-          SCAD Kopyala
-        </button>
-        <button class="btn-raw" data-raw="${car.id}" onclick="copyRaw(${car.id})" title="Ham ölçüleri kopyala">Ham</button>
-      </div>
+      <button class="btn-scad" data-scad="${car.id}" onclick="copyScad(${car.id})">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copy SCAD
+      </button>
     </div>
   </div>`;
 }
 
 // ============================================================
-// FİLTRE & RENDER
+// FILTERS & RENDER
 // ============================================================
 function populateFilters() {
-  const brands  = [...new Set(CARS.map(c => c.brand))].sort();
-  const years   = [...new Set(CARS.map(c => c.year))].sort((a,b) => b-a);
-  const series  = [...new Set(CARS.map(c => c.series))].sort();
+  const manufacturers = [...new Set(CARS.map(c => c.manufacturer))].sort();
+  const carBrands     = [...new Set(CARS.map(c => c.carBrand))].sort();
+
+  const mSel = document.getElementById("filter-manufacturer");
+  manufacturers.forEach(m => {
+    const o = document.createElement("option");
+    o.value = m; o.textContent = m; mSel.appendChild(o);
+  });
 
   const bSel = document.getElementById("filter-brand");
-  brands.forEach(b => { const o = document.createElement("option"); o.value = b; o.textContent = b; bSel.appendChild(o); });
-
-  const ySel = document.getElementById("filter-year");
-  years.forEach(y => { const o = document.createElement("option"); o.value = y; o.textContent = y; ySel.appendChild(o); });
-
-  const sSel = document.getElementById("filter-series");
-  series.forEach(s => { const o = document.createElement("option"); o.value = s; o.textContent = s; sSel.appendChild(o); });
+  carBrands.forEach(b => {
+    const o = document.createElement("option");
+    o.value = b; o.textContent = b; bSel.appendChild(o);
+  });
 
   document.getElementById("total-count").textContent = CARS.length;
 }
 
 function renderGrid() {
-  const q      = document.getElementById("search").value.toLowerCase();
-  const brand  = document.getElementById("filter-brand").value;
-  const year   = document.getElementById("filter-year").value;
-  const series = document.getElementById("filter-series").value;
+  const q    = document.getElementById("search").value.toLowerCase();
+  const mfr  = document.getElementById("filter-manufacturer").value;
+  const brand = document.getElementById("filter-brand").value;
 
   const filtered = CARS.filter(c => {
-    const matchQ = !q || c.name.toLowerCase().includes(q) || c.brand.toLowerCase().includes(q) || c.code.toLowerCase().includes(q);
-    const matchB = !brand  || c.brand === brand;
-    const matchY = !year   || String(c.year) === year;
-    const matchS = !series || c.series === series;
-    return matchQ && matchB && matchY && matchS;
+    const matchQ = !q || c.name.toLowerCase().includes(q) || c.manufacturer.toLowerCase().includes(q) || c.carBrand.toLowerCase().includes(q) || c.code.toLowerCase().includes(q);
+    const matchM = !mfr   || c.manufacturer === mfr;
+    const matchB = !brand || c.carBrand === brand;
+    return matchQ && matchM && matchB;
   });
 
   const grid = document.getElementById("grid");
-  document.getElementById("filter-count").textContent = `${filtered.length} araç gösteriliyor`;
+  document.getElementById("filter-count").textContent = `${filtered.length} car${filtered.length !== 1 ? 's' : ''}`;
 
   if (filtered.length === 0) {
     grid.innerHTML = `<div class="empty">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
       </svg>
-      <p>Araç bulunamadı. Filtrelerinizi değiştirmeyi deneyin.</p>
+      <p>No cars found. Try adjusting your filters.</p>
     </div>`;
     return;
   }
@@ -747,15 +642,14 @@ function renderGrid() {
 }
 
 // ============================================================
-// BAŞLAT
+// INIT
 // ============================================================
 populateFilters();
 renderGrid();
 
 document.getElementById("search").addEventListener("input", renderGrid);
+document.getElementById("filter-manufacturer").addEventListener("change", renderGrid);
 document.getElementById("filter-brand").addEventListener("change", renderGrid);
-document.getElementById("filter-year").addEventListener("change", renderGrid);
-document.getElementById("filter-series").addEventListener("change", renderGrid);
 </script>
 </body>
 </html>
