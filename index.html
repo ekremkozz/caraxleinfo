@@ -201,6 +201,18 @@
   }
   .car-meta .dot { color: var(--text3); }
 
+  .custom-plate-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(62,207,142,0.12);
+    color: #6ee7b7;
+    border: 1px solid rgba(62,207,142,0.25);
+    font-weight: 500;
+    margin-left: 6px;
+  }
+
   .measures-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -402,77 +414,579 @@
 const CARS = [
   {
     id: 1,
-    name: "1983 Porsche 928S",
-    manufacturer: "Hot Wheels",  // Model manufacturer (Hot Wheels, Mini GT, etc.)
-    carBrand: "Porsche",         // Real car brand
-    series: "Mainline",
-    year: 2025,
-    code: "HYW53",
+    name: "Porsche 911 GT3 R #77 (889)",
+    manufacturer: "Mini GT",
+    carBrand: "Porsche",
+    customPlate: false,
     image: "",
     measurements: {
-      wheelbase: 42.0,
-      front_wheel_diameter: 12.4,
-      front_wheel_width: 5.1,
-      front_wheels_inner_distance: 15.2,
-      rear_wheel_diameter: 12.4,
-      rear_wheel_width: 5.1,
-      rear_wheels_inner_distance: 19.0,
+      wheelbase: 39.0,
+      front_wheel_diameter: 12.0,
+      front_wheel_width: 5.2,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 12.0,
+      rear_wheel_width: 5.2,
+      rear_wheels_inner_distance: 21.5,
     }
   },
   {
     id: 2,
-    name: "Triumph TR6",
-    manufacturer: "Hot Wheels",
-    carBrand: "Triumph",
-    series: "Mainline",
-    year: 2025,
-    code: "JBC34",
+    name: "Porsche 911 (992) GT3 RS (681)",
+    manufacturer: "Mini GT",
+    carBrand: "Porsche",
+    customPlate: false,
     image: "",
     measurements: {
-      wheelbase: 39.5,
-      front_wheel_diameter: 11.9,
-      front_wheel_width: 4.8,
-      front_wheels_inner_distance: 14.8,
-      rear_wheel_diameter: 11.9,
-      rear_wheel_width: 4.8,
-      rear_wheels_inner_distance: 18.5,
+      wheelbase: 38.0,
+      front_wheel_diameter: 12.0,
+      front_wheel_width: 5.2,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 12.0,
+      rear_wheel_width: 5.2,
+      rear_wheels_inner_distance: 21.5,
     }
   },
   {
     id: 3,
-    name: "Polestar TRX",
-    manufacturer: "Hot Wheels",
-    carBrand: "Polestar",
-    series: "Mainline",
-    year: 2025,
-    code: "HYW29",
+    name: "Toyota GR86 LB★Nation (885)",
+    manufacturer: "Mini GT",
+    carBrand: "Toyota",
+    customPlate: false,
     image: "",
     measurements: {
-      wheelbase: 41.0,
-      front_wheel_diameter: 12.0,
-      front_wheel_width: 5.0,
-      front_wheels_inner_distance: 15.0,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 5.0,
-      rear_wheels_inner_distance: 19.2,
+      wheelbase: 40.0,
+      front_wheel_diameter: 10.0,
+      front_wheel_width: 4.5,
+      front_wheels_inner_distance: 20.0,
+      rear_wheel_diameter: 10.0,
+      rear_wheel_width: 4.8,
+      rear_wheels_inner_distance: 20.0,
     }
   },
   {
     id: 4,
-    name: "Ford RS200",
+    name: "Porsche 911 Dakar (958)",
+    manufacturer: "Mini GT",
+    carBrand: "Porsche",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 39.0,
+      front_wheel_diameter: 11.5,
+      front_wheel_width: 4.1,
+      front_wheels_inner_distance: 20.5,
+      rear_wheel_diameter: 12.0,
+      rear_wheel_width: 5.1,
+      rear_wheels_inner_distance: 19.2,
+    }
+  },
+  {
+    id: 5,
+    name: "Nissan GT-R Nismo 2024 NISMO (868)",
+    manufacturer: "Mini GT",
+    carBrand: "Nissan",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 43.0,
+      front_wheel_diameter: 11.2,
+      front_wheel_width: 4.5,
+      front_wheels_inner_distance: 20.5,
+      rear_wheel_diameter: 11.2,
+      rear_wheel_width: 4.5,
+      rear_wheels_inner_distance: 21.5,
+    }
+  },
+  {
+    id: 6,
+    name: "Honda Civic Type R #2 2023 (721)",
+    manufacturer: "Mini GT",
+    carBrand: "Honda",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 43.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 4.5,
+      front_wheels_inner_distance: 20.3,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 4.5,
+      rear_wheels_inner_distance: 20.3,
+    }
+  },
+  {
+    id: 7,
+    name: "Lamborghini Countach LB-WORKS (966)",
+    manufacturer: "Mini GT",
+    carBrand: "Lamborghini",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 39.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 4.0,
+      front_wheels_inner_distance: 22.3,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 5.2,
+      rear_wheels_inner_distance: 22.3,
+    }
+  },
+  {
+    id: 8,
+    name: "McLaren 720S GT3 Evo (984)",
+    manufacturer: "Mini GT",
+    carBrand: "McLaren",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 42.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.0,
+      front_wheels_inner_distance: 21.2,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 6.0,
+      rear_wheels_inner_distance: 20.5,
+    }
+  },
+  {
+    id: 9,
+    name: "'71 Datsun 510",
     manufacturer: "Hot Wheels",
-    carBrand: "Ford",
-    series: "Mainline",
-    year: 2025,
-    code: "JBC49",
+    carBrand: "Datsun",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 42.5,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.5,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 5.5,
+      rear_wheels_inner_distance: 21.0,
+    }
+  },
+  {
+    id: 10,
+    name: "'91 Mazda MX-5 Miata",
+    manufacturer: "Hot Wheels",
+    carBrand: "Mazda",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 39.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.5,
+      front_wheels_inner_distance: 20.5,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 5.5,
+      rear_wheels_inner_distance: 20.5,
+    }
+  },
+  {
+    id: 11,
+    name: "'82 Toyota Supra",
+    manufacturer: "Hot Wheels",
+    carBrand: "Toyota",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 42.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.5,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 5.5,
+      rear_wheels_inner_distance: 20.5,
+    }
+  },
+  {
+    id: 12,
+    name: "'67 Shelby GT500",
+    manufacturer: "Hot Wheels",
+    carBrand: "Shelby",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 43.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.5,
+      front_wheels_inner_distance: 18.0,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 5.5,
+      rear_wheels_inner_distance: 18.0,
+    }
+  },
+  {
+    id: 13,
+    name: "Batmobile '17",
+    manufacturer: "Hot Wheels",
+    carBrand: "Batmobile",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 48.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.5,
+      front_wheels_inner_distance: 16.2,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 5.5,
+      rear_wheels_inner_distance: 18.5,
+    }
+  },
+  {
+    id: 14,
+    name: "'96 Porsche Carrera",
+    manufacturer: "Hot Wheels",
+    carBrand: "Porsche",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 39.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.5,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 5.5,
+      rear_wheels_inner_distance: 21.0,
+    }
+  },
+  {
+    id: 15,
+    name: "'20 Toyota Tacoma",
+    manufacturer: "Hot Wheels",
+    carBrand: "Toyota",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 44.5,
+      front_wheel_diameter: 15.0,
+      front_wheel_width: 5.5,
+      front_wheels_inner_distance: 20.5,
+      rear_wheel_diameter: 15.0,
+      rear_wheel_width: 5.5,
+      rear_wheels_inner_distance: 20.5,
+    }
+  },
+  {
+    id: 16,
+    name: "'01 Custom Acura Integra GSR",
+    manufacturer: "Hot Wheels",
+    carBrand: "Acura",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 40.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.5,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 5.5,
+      rear_wheels_inner_distance: 20.5,
+    }
+  },
+  {
+    id: 17,
+    name: "Audi S4 Quattro",
+    manufacturer: "Hot Wheels",
+    carBrand: "Audi",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 43.0,
+      front_wheel_diameter: 11.2,
+      front_wheel_width: 5.5,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 11.2,
+      rear_wheel_width: 5.5,
+      rear_wheels_inner_distance: 21.0,
+    }
+  },
+  {
+    id: 18,
+    name: "Honda Civic SI",
+    manufacturer: "Hot Wheels",
+    carBrand: "Honda",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 43.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.5,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 5.5,
+      rear_wheels_inner_distance: 21.0,
+    }
+  },
+  {
+    id: 19,
+    name: "Nissan Skyline HT 2000GT-X",
+    manufacturer: "Hot Wheels",
+    carBrand: "Nissan",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 44.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.5,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 5.5,
+      rear_wheels_inner_distance: 21.0,
+    }
+  },
+  {
+    id: 20,
+    name: "Porsche 911 Carrera RS 3.8",
+    manufacturer: "Hot Wheels",
+    carBrand: "Porsche",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 39.0,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 6.0,
+      front_wheels_inner_distance: 20.0,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 6.0,
+      rear_wheels_inner_distance: 20.0,
+    }
+  },
+  {
+    id: 21,
+    name: "'26 Mercedes-AMG F1",
+    manufacturer: "Hot Wheels",
+    carBrand: "Mercedes",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 56.5,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.4,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 7.2,
+      rear_wheels_inner_distance: 17.5,
+    }
+  },
+  {
+    id: 22,
+    name: "Porsche 911 Carrera RS 2.7",
+    manufacturer: "Majorette",
+    carBrand: "Porsche",
+    customPlate: false,
     image: "",
     measurements: {
       wheelbase: 40.5,
-      front_wheel_diameter: 12.2,
+      front_wheel_diameter: 12.0,
       front_wheel_width: 5.2,
-      front_wheels_inner_distance: 15.5,
-      rear_wheel_diameter: 12.2,
+      front_wheels_inner_distance: 18.5,
+      rear_wheel_diameter: 12.0,
       rear_wheel_width: 5.2,
+      rear_wheels_inner_distance: 18.5,
+    }
+  },
+  {
+    id: 23,
+    name: "'26 McLaren F1",
+    manufacturer: "Hot Wheels",
+    carBrand: "McLaren",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 56.5,
+      front_wheel_diameter: 11.0,
+      front_wheel_width: 5.4,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 7.2,
+      rear_wheels_inner_distance: 17.5,
+    }
+  },
+  {
+    id: 24,
+    name: "Porsche 911 GT3 Cup (992)",
+    manufacturer: "Majorette",
+    carBrand: "Porsche",
+    customPlate: true,
+    image: "",
+    measurements: {
+      wheelbase: 40.0,
+      front_wheel_diameter: 12.0,
+      front_wheel_width: 5.2,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 12.0,
+      rear_wheel_width: 5.2,
+      rear_wheels_inner_distance: 21.0,
+    }
+  },
+  {
+    id: 25,
+    name: "Porsche 911 Carrera S",
+    manufacturer: "Majorette",
+    carBrand: "Porsche",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 41.0,
+      front_wheel_diameter: 12.0,
+      front_wheel_width: 5.2,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 12.0,
+      rear_wheel_width: 5.2,
+      rear_wheels_inner_distance: 21.0,
+    }
+  },
+  {
+    id: 26,
+    name: "McLaren 720S LB-WORKS (828)",
+    manufacturer: "Mini GT",
+    carBrand: "McLaren",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 42.0,
+      front_wheel_diameter: 10.5,
+      front_wheel_width: 4.5,
+      front_wheels_inner_distance: 22.8,
+      rear_wheel_diameter: 11.2,
+      rear_wheel_width: 5.3,
+      rear_wheels_inner_distance: 22.0,
+    }
+  },
+  {
+    id: 27,
+    name: "Porsche 935 K3",
+    manufacturer: "Majorette",
+    carBrand: "Porsche",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 37.0,
+      front_wheel_diameter: 12.0,
+      front_wheel_width: 5.2,
+      front_wheels_inner_distance: 19.0,
+      rear_wheel_diameter: 12.0,
+      rear_wheel_width: 5.2,
+      rear_wheels_inner_distance: 22.0,
+    }
+  },
+  {
+    id: 28,
+    name: "Porsche 917 KH",
+    manufacturer: "Majorette",
+    carBrand: "Porsche",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 40.0,
+      front_wheel_diameter: 12.0,
+      front_wheel_width: 5.2,
+      front_wheels_inner_distance: 24.0,
+      rear_wheel_diameter: 12.0,
+      rear_wheel_width: 5.2,
+      rear_wheels_inner_distance: 24.0,
+    }
+  },
+  {
+    id: 29,
+    name: "Ferrari 296 GTB Assetto Fiorano",
+    manufacturer: "Maisto",
+    carBrand: "Ferrari",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 41.0,
+      front_wheel_diameter: 11.5,
+      front_wheel_width: 5.0,
+      front_wheels_inner_distance: 21.0,
+      rear_wheel_diameter: 11.5,
+      rear_wheel_width: 6.0,
+      rear_wheels_inner_distance: 18.3,
+    }
+  },
+  {
+    id: 30,
+    name: "Lamborghini Sian FKP 37",
+    manufacturer: "Maisto",
+    carBrand: "Lamborghini",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 42.5,
+      front_wheel_diameter: 12.0,
+      front_wheel_width: 5.0,
+      front_wheels_inner_distance: 22.4,
+      rear_wheel_diameter: 12.0,
+      rear_wheel_width: 6.0,
+      rear_wheels_inner_distance: 20.75,
+    }
+  },
+  {
+    id: 31,
+    name: "Porsche 911 GT2 RS",
+    manufacturer: "Maisto",
+    carBrand: "Porsche",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 38.0,
+      front_wheel_diameter: 12.0,
+      front_wheel_width: 5.0,
+      front_wheels_inner_distance: 19.0,
+      rear_wheel_diameter: 12.0,
+      rear_wheel_width: 6.0,
+      rear_wheels_inner_distance: 17.5,
+    }
+  },
+  {
+    id: 32,
+    name: "Porsche Taycan Turbo S",
+    manufacturer: "Maisto",
+    carBrand: "Porsche",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 45.5,
+      front_wheel_diameter: 12.0,
+      front_wheel_width: 5.0,
+      front_wheels_inner_distance: 20.5,
+      rear_wheel_diameter: 12.0,
+      rear_wheel_width: 6.0,
+      rear_wheels_inner_distance: 18.5,
+    }
+  },
+  {
+    id: 33,
+    name: "'90 Volkswagen Golf Country",
+    manufacturer: "Matchbox",
+    carBrand: "Volkswagen",
+    customPlate: false,
+    image: "",
+    measurements: {
+      wheelbase: 41.0,
+      front_wheel_diameter: 11.5,
+      front_wheel_width: 5.2,
+      front_wheels_inner_distance: 19.7,
+      rear_wheel_diameter: 11.5,
+      rear_wheel_width: 5.2,
+      rear_wheels_inner_distance: 19.7,
+    }
+  },
+  {
+    id: 34,
+    name: "Pagani Imola (Nero Oro)",
+    manufacturer: "Tarmac",
+    carBrand: "Pagani",
+    customPlate: true,
+    image: "",
+    measurements: {
+      wheelbase: 43.0,
+      front_wheel_diameter: 10.5,
+      front_wheel_width: 4.3,
+      front_wheels_inner_distance: 22.0,
+      rear_wheel_diameter: 11.0,
+      rear_wheel_width: 6.5,
       rear_wheels_inner_distance: 19.5,
     }
   },
@@ -546,7 +1060,7 @@ function renderCard(car) {
     <div class="card-body">
       <div class="car-name">${car.name}</div>
       <div class="car-meta">
-        ${car.carBrand}${car.code ? ` <span class="dot">·</span> ${car.code}` : ''}
+        ${car.carBrand}${car.customPlate ? ' <span class="custom-plate-badge">Custom Plate</span>' : ''}
       </div>
 
       <div class="measures-grid">
