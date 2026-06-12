@@ -168,9 +168,12 @@
   /* ── GRID ── */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
     padding: 20px 24px;
+  }
+  @media (min-width: 1100px) {
+    .grid { grid-template-columns: repeat(5, 1fr); }
   }
 
   /* ── CARD ── */
@@ -180,34 +183,32 @@
     border-radius: var(--radius-lg);
     overflow: hidden;
     cursor: pointer;
-    transition: border-color .15s, transform .15s, box-shadow .15s;
+    transition: border-color .2s, transform .2s, box-shadow .2s;
     position: relative;
   }
   .card:hover {
     border-color: var(--border2);
     transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-  }
-
-  /* colored top stripe per manufacturer */
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--mfr-color, var(--accent));
-    z-index: 1;
+    box-shadow: 0 10px 36px rgba(0,0,0,0.5);
   }
 
   .card-img {
-    height: 130px;
+    height: 250px;
     background: var(--surface2);
     display: flex; align-items: flex-end; justify-content: center;
     overflow: hidden; position: relative;
   }
+  /* dominant color glow at bottom of image */
+  .card-img::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center bottom, var(--card-glow, transparent) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 1;
+  }
   .card-img img {
     width: 100%; height: 100%; object-fit: cover;
-    object-position: center;
+    object-position: center 10%;
   }
   .card-img .placeholder {
     display: flex; flex-direction: column; align-items: center;
@@ -434,7 +435,7 @@
   </div>
   <div class="header-right">
     <div class="stat-pill">Total: <span id="total-count">0</span> cars</div>
-    <a href="https://makerworld.com/en/models/1289843" target="_blank" class="btn-ghost btn-makerworld">
+    <a href="https://makerworld.com/en/models/1895553-ikea-samla-65l-filament-rack-system#profileId-2030875" target="_blank" class="btn-ghost btn-makerworld">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
       </svg>
@@ -444,12 +445,12 @@
       <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
       GitHub
     </a>
-    <a href="mailto:?subject=1/64%20Chassis%20Info%20-%20Car%20Measurements" class="btn-ghost">
+    <button class="btn-ghost" onclick="openFeedback()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
       </svg>
       Submit
-    </a>
+    </button>
   </div>
 </header>
 
@@ -490,6 +491,76 @@
   </div>
 </div>
 
+<!-- FEEDBACK MODAL -->
+<div class="modal-overlay" id="feedback-overlay" onclick="closeFeedback(event)">
+  <div class="modal" style="max-width:440px">
+    <button class="modal-close" style="position:absolute;top:14px;right:14px;z-index:10" onclick="closeFeedbackDirect()">✕</button>
+    <div class="modal-body" style="padding:28px 24px 24px">
+      <div class="modal-title" style="margin-bottom:6px">Submit Measurements</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.6">Measured a car that's not in the database? Fill in the form below and I'll add it.</p>
+      <form id="feedback-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <label style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px">Your name / contact (optional)</label>
+          <input type="text" name="contact" placeholder="e.g. John or john@email.com" style="width:100%">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <label style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px">Car name *</label>
+          <input type="text" name="car_name" placeholder="e.g. Ferrari F40" required style="width:100%">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <label style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px">Manufacturer *</label>
+            <input type="text" name="manufacturer" placeholder="e.g. Hot Wheels" required style="width:100%">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <label style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px">Car brand *</label>
+            <input type="text" name="car_brand" placeholder="e.g. Ferrari" required style="width:100%">
+          </div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px">
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">Measurements (mm) *</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:10px;color:var(--text3)">Wheelbase</label>
+              <input type="number" name="wheelbase" placeholder="42.0" step="0.1" style="width:100%">
+            </div>
+            <div></div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:10px;color:var(--accent)">Front Diameter</label>
+              <input type="number" name="front_diameter" placeholder="11.0" step="0.1" style="width:100%;border-left:2px solid var(--accent)">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:10px;color:var(--accent2)">Rear Diameter</label>
+              <input type="number" name="rear_diameter" placeholder="11.0" step="0.1" style="width:100%;border-left:2px solid var(--accent2)">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:10px;color:var(--accent)">Front Width</label>
+              <input type="number" name="front_width" placeholder="5.5" step="0.1" style="width:100%;border-left:2px solid var(--accent)">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:10px;color:var(--accent2)">Rear Width</label>
+              <input type="number" name="rear_width" placeholder="5.5" step="0.1" style="width:100%;border-left:2px solid var(--accent2)">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:10px;color:var(--accent)">Front Inner Gap</label>
+              <input type="number" name="front_inner" placeholder="21.0" step="0.1" style="width:100%;border-left:2px solid var(--accent)">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:10px;color:var(--accent2)">Rear Inner Gap</label>
+              <input type="number" name="rear_inner" placeholder="21.0" step="0.1" style="width:100%;border-left:2px solid var(--accent2)">
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn-scad" style="margin-top:4px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          Send Measurements
+        </button>
+      </form>
+      <p id="feedback-thanks" style="display:none;text-align:center;padding:20px 0;color:var(--green);font-weight:600">Thanks! I'll review and add it soon. 🙌</p>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -500,7 +571,7 @@
 
 <!-- FOOTER -->
 <footer>
-  Made by <a href="https://github.com/ekremkozz" target="_blank">Ekrem Uyar</a> &amp;
+  Made by <a href="https://github.com/ekremkozz" target="_blank">Ekrem Koz</a> &amp;
   <a href="https://claude.ai" target="_blank">Claude (Anthropic)</a><br>
   Data measured by hand. Use at your own risk. All model car brands are trademarks of their respective owners.
 </footer>
@@ -544,40 +615,40 @@ const BRAND_COLORS = {
 // DATABASE
 // ============================================================
 const CARS = [
-  { id:1,  name:"Porsche 911 GT3 R #77 (889)",       manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"889", customPlate:false, image:"images/MiniGT/Porsche 911 GT3 R(992).jpg",              measurements:{wheelbase:39.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.5}},
-  { id:2,  name:"Porsche 911 (992) GT3 RS (681)",     manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"681", customPlate:false, image:"images/MiniGT/Porsche 911 (992) GT3 RS.jpg",            measurements:{wheelbase:38.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.5}},
-  { id:3,  name:"Toyota GR86 LB\u2605Nation (885)",   manufacturer:"Mini GT",   carBrand:"Toyota",      minigtCode:"885", customPlate:false, image:"images/MiniGT/Toyota GR86 LB\u2605Nation.jpg",          measurements:{wheelbase:40.0,front_wheel_diameter:10.0,front_wheel_width:4.5,front_wheels_inner_distance:20.0,rear_wheel_diameter:10.0,rear_wheel_width:4.8,rear_wheels_inner_distance:20.0}},
-  { id:4,  name:"Porsche 911 Dakar (958)",            manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"958", customPlate:false, image:"images/MiniGT/Porsche 911 Dakar.jpg",                   measurements:{wheelbase:39.0,front_wheel_diameter:11.5,front_wheel_width:4.1,front_wheels_inner_distance:20.5,rear_wheel_diameter:12.0,rear_wheel_width:5.1,rear_wheels_inner_distance:19.2}},
-  { id:5,  name:"Nissan GT-R Nismo 2024 NISMO (868)", manufacturer:"Mini GT",   carBrand:"Nissan",      minigtCode:"868", customPlate:false, image:"images/MiniGT/Nissan GT-R Nismo 2024.jpg",              measurements:{wheelbase:43.0,front_wheel_diameter:11.2,front_wheel_width:4.5,front_wheels_inner_distance:20.5,rear_wheel_diameter:11.2,rear_wheel_width:4.5,rear_wheels_inner_distance:21.5}},
-  { id:6,  name:"Honda Civic Type R #2 2023 (721)",   manufacturer:"Mini GT",   carBrand:"Honda",       minigtCode:"721", customPlate:false, image:"images/MiniGT/Honda Civic Type R.jpg",                  measurements:{wheelbase:43.0,front_wheel_diameter:11.0,front_wheel_width:4.5,front_wheels_inner_distance:20.3,rear_wheel_diameter:11.0,rear_wheel_width:4.5,rear_wheels_inner_distance:20.3}},
-  { id:7,  name:"Lamborghini Countach LB-WORKS (966)",manufacturer:"Mini GT",   carBrand:"Lamborghini", minigtCode:"966", customPlate:false, image:"images/MiniGT/Lamborghini Countach LB-WORKS.jpg",       measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:4.0,front_wheels_inner_distance:22.3,rear_wheel_diameter:11.0,rear_wheel_width:5.2,rear_wheels_inner_distance:22.3}},
-  { id:8,  name:"McLaren 720S GT3 Evo (984)",         manufacturer:"Mini GT",   carBrand:"McLaren",     minigtCode:"984", customPlate:false, image:"images/MiniGT/McLaren 720S GT3 Evo.jpg",                measurements:{wheelbase:42.0,front_wheel_diameter:11.0,front_wheel_width:5.0,front_wheels_inner_distance:21.2,rear_wheel_diameter:11.0,rear_wheel_width:6.0,rear_wheels_inner_distance:20.5}},
-  { id:26, name:"McLaren 720S LB-WORKS (828)",        manufacturer:"Mini GT",   carBrand:"McLaren",     minigtCode:"828", customPlate:false, image:"images/MiniGT/McLaren 720S LB\u2605Works.jpg",          measurements:{wheelbase:42.0,front_wheel_diameter:10.5,front_wheel_width:4.5,front_wheels_inner_distance:22.8,rear_wheel_diameter:11.2,rear_wheel_width:5.3,rear_wheels_inner_distance:22.0}},
-  { id:9,  name:"'71 Datsun 510",                     manufacturer:"Hot Wheels",carBrand:"Datsun",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Datsun 510.jpg",                      measurements:{wheelbase:42.5,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
-  { id:10, name:"'91 Mazda MX-5 Miata",               manufacturer:"Hot Wheels",carBrand:"Mazda",       minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Mazda MX-5 Miata.jpg",               measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:20.5,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
-  { id:11, name:"'82 Toyota Supra",                   manufacturer:"Hot Wheels",carBrand:"Toyota",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Toyota Supra.jpg",                    measurements:{wheelbase:42.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
-  { id:12, name:"'67 Shelby GT500",                   manufacturer:"Hot Wheels",carBrand:"Shelby",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Shelby GT500.jpg",                    measurements:{wheelbase:43.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:18.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:18.0}},
-  { id:13, name:"Batmobile '17",                      manufacturer:"Hot Wheels",carBrand:"Batmobile",   minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Batmobile.jpg",                       measurements:{wheelbase:48.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:16.2,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:18.5}},
-  { id:14, name:"'96 Porsche Carrera",                manufacturer:"Hot Wheels",carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Porsche Carrera.jpg",                 measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
-  { id:15, name:"'20 Toyota Tacoma",                  manufacturer:"Hot Wheels",carBrand:"Toyota",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Toyota Tacoma.jpg",                   measurements:{wheelbase:44.5,front_wheel_diameter:15.0,front_wheel_width:5.5,front_wheels_inner_distance:20.5,rear_wheel_diameter:15.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
-  { id:16, name:"'01 Custom Acura Integra GSR",       manufacturer:"Hot Wheels",carBrand:"Acura",       minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Acura Integra GSR.jpg",               measurements:{wheelbase:40.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
-  { id:17, name:"Audi S4 Quattro",                    manufacturer:"Hot Wheels",carBrand:"Audi",        minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Audi S4 Quattro.jpg",                 measurements:{wheelbase:43.0,front_wheel_diameter:11.2,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.2,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
-  { id:18, name:"Honda Civic SI",                     manufacturer:"Hot Wheels",carBrand:"Honda",       minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Honda Civic SI.jpg",                  measurements:{wheelbase:43.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
-  { id:19, name:"Nissan Skyline HT 2000GT-X",         manufacturer:"Hot Wheels",carBrand:"Nissan",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Nissan Skyline HT 2000GT-X.jpg",      measurements:{wheelbase:44.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
-  { id:20, name:"Porsche 911 Carrera RS 3.8",         manufacturer:"Hot Wheels",carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Porsche 911 Carrera RS 3.8.jpg",      measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:6.0,front_wheels_inner_distance:20.0,rear_wheel_diameter:11.0,rear_wheel_width:6.0,rear_wheels_inner_distance:20.0}},
-  { id:21, name:"'26 Mercedes-AMG F1",                manufacturer:"Hot Wheels",carBrand:"Mercedes",    minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Mercedes-AMG F1.jpg",                 measurements:{wheelbase:56.5,front_wheel_diameter:11.0,front_wheel_width:5.4,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:7.2,rear_wheels_inner_distance:17.5}},
-  { id:23, name:"'26 McLaren F1",                     manufacturer:"Hot Wheels",carBrand:"McLaren",     minigtCode:null,  customPlate:false, image:"images/Hot Wheels/McLaren F1.jpg",                      measurements:{wheelbase:56.5,front_wheel_diameter:11.0,front_wheel_width:5.4,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:7.2,rear_wheels_inner_distance:17.5}},
-  { id:22, name:"Porsche 911 Carrera RS 2.7",         manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera RS 2.7.jpg",       measurements:{wheelbase:40.5,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:18.5,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:18.5}},
-  { id:24, name:"Porsche 911 GT3 Cup (992)",          manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:true,  image:"images/Majorette/Porsche 911 GT3 Cup (992).jpg",        measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
-  { id:25, name:"Porsche 911 Carrera S",              manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera S.jpg",            measurements:{wheelbase:41.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
-  { id:27, name:"Porsche 935 K3",                     manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 935 K3.jpg",                   measurements:{wheelbase:37.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:19.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:22.0}},
-  { id:28, name:"Porsche 917 KH",                     manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 917 KH.jpg",                   measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:24.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:24.0}},
-  { id:29, name:"Ferrari 296 GTB Assetto Fiorano",    manufacturer:"Maisto",    carBrand:"Ferrari",     minigtCode:null,  customPlate:false, image:"images/Maisto/Ferrari 296 GTB Assetto Fiorano.jpg",     measurements:{wheelbase:41.0,front_wheel_diameter:11.5,front_wheel_width:5.0,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.5,rear_wheel_width:6.0,rear_wheels_inner_distance:18.3}},
-  { id:30, name:"Lamborghini Sian FKP 37",            manufacturer:"Maisto",    carBrand:"Lamborghini", minigtCode:null,  customPlate:false, image:"images/Maisto/Lamborghini Sian FKP 37.jpg",             measurements:{wheelbase:42.5,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:22.4,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:20.75}},
-  { id:31, name:"Porsche 911 GT2 RS",                 manufacturer:"Maisto",    carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Maisto/Porsche 911 GT2 RS.jpg",                  measurements:{wheelbase:38.0,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:19.0,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:17.5}},
-  { id:32, name:"Porsche Taycan Turbo S",             manufacturer:"Maisto",    carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Maisto/Porsche Taycan Turbo S.jpg",              measurements:{wheelbase:45.5,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:20.5,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:18.5}},
-  { id:33, name:"'90 Volkswagen Golf Country",        manufacturer:"Matchbox",  carBrand:"Volkswagen",  minigtCode:null,  customPlate:false, image:"images/Matchbox/'90 Volkswagen Golf Country.jpg",       measurements:{wheelbase:41.0,front_wheel_diameter:11.5,front_wheel_width:5.2,front_wheels_inner_distance:19.7,rear_wheel_diameter:11.5,rear_wheel_width:5.2,rear_wheels_inner_distance:19.7}},
-  { id:34, name:"Pagani Imola (Nero Oro)",            manufacturer:"Tarmac",    carBrand:"Pagani",      minigtCode:null,  customPlate:true,  image:"images/Tarmac/Pagani Imola (Nero Oro).jpg",             measurements:{wheelbase:43.0,front_wheel_diameter:10.5,front_wheel_width:4.3,front_wheels_inner_distance:22.0,rear_wheel_diameter:11.0,rear_wheel_width:6.5,rear_wheels_inner_distance:19.5}},
+  { id:1,  name:"Porsche 911 GT3 R #77",       color:"#2a7a2a", manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"889", customPlate:false, image:"images/MiniGT/Porsche 911 GT3 R(992).jpg",              measurements:{wheelbase:39.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.5}},
+  { id:2,  name:"Porsche 911 (992) GT3 RS",     color:"#111111", manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"681", customPlate:false, image:"images/MiniGT/Porsche 911 (992) GT3 RS.jpg",            measurements:{wheelbase:38.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.5}},
+  { id:3,  name:"Toyota GR86 LB\u2605Nation",   color:"#cc2200", manufacturer:"Mini GT",   carBrand:"Toyota",      minigtCode:"885", customPlate:false, image:"images/MiniGT/Toyota GR86 LB\u2605Nation.jpg",          measurements:{wheelbase:40.0,front_wheel_diameter:10.0,front_wheel_width:4.5,front_wheels_inner_distance:20.0,rear_wheel_diameter:10.0,rear_wheel_width:4.8,rear_wheels_inner_distance:20.0}},
+  { id:4,  name:"Porsche 911 Dakar",            color:"#111111", manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"958", customPlate:false, image:"images/MiniGT/Porsche 911 Dakar.jpg",                   measurements:{wheelbase:39.0,front_wheel_diameter:11.5,front_wheel_width:4.1,front_wheels_inner_distance:20.5,rear_wheel_diameter:12.0,rear_wheel_width:5.1,rear_wheels_inner_distance:19.2}},
+  { id:5,  name:"Nissan GT-R Nismo 2024 NISMO", color:"#4a5568", manufacturer:"Mini GT",   carBrand:"Nissan",      minigtCode:"868", customPlate:false, image:"images/MiniGT/Nissan GT-R Nismo 2024.jpg",              measurements:{wheelbase:43.0,front_wheel_diameter:11.2,front_wheel_width:4.5,front_wheels_inner_distance:20.5,rear_wheel_diameter:11.2,rear_wheel_width:4.5,rear_wheels_inner_distance:21.5}},
+  { id:6,  name:"Honda Civic Type R",   color:"#eeeeee", manufacturer:"Mini GT",   carBrand:"Honda",       minigtCode:"721", customPlate:false, image:"images/MiniGT/Honda Civic Type R.jpg",                  measurements:{wheelbase:43.0,front_wheel_diameter:11.0,front_wheel_width:4.5,front_wheels_inner_distance:20.3,rear_wheel_diameter:11.0,rear_wheel_width:4.5,rear_wheels_inner_distance:20.3}},
+  { id:7,  name:"Lamborghini Countach LB-WORKS",color:"#eeeeee", manufacturer:"Mini GT",   carBrand:"Lamborghini", minigtCode:"966", customPlate:false, image:"images/MiniGT/Lamborghini Countach LB-WORKS.jpg",       measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:4.0,front_wheels_inner_distance:22.3,rear_wheel_diameter:11.0,rear_wheel_width:5.2,rear_wheels_inner_distance:22.3}},
+  { id:8,  name:"McLaren 720S GT3 Evo",         color:"#e87020", manufacturer:"Mini GT",   carBrand:"McLaren",     minigtCode:"984", customPlate:false, image:"images/MiniGT/McLaren 720S GT3 Evo.jpg",                measurements:{wheelbase:42.0,front_wheel_diameter:11.0,front_wheel_width:5.0,front_wheels_inner_distance:21.2,rear_wheel_diameter:11.0,rear_wheel_width:6.0,rear_wheels_inner_distance:20.5}},
+  { id:26, name:"McLaren 720S LB-WORKS",        color:"#cc2200", manufacturer:"Mini GT",   carBrand:"McLaren",     minigtCode:"828", customPlate:false, image:"images/MiniGT/McLaren 720S LB\u2605Works.jpg",          measurements:{wheelbase:42.0,front_wheel_diameter:10.5,front_wheel_width:4.5,front_wheels_inner_distance:22.8,rear_wheel_diameter:11.2,rear_wheel_width:5.3,rear_wheels_inner_distance:22.0}},
+  { id:9,  name:"'71 Datsun 510",                     color:"#1a3a6a", manufacturer:"Hot Wheels",carBrand:"Datsun",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Datsun 510.jpg",                      measurements:{wheelbase:42.5,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
+  { id:10, name:"'91 Mazda MX-5 Miata",               color:"#cc2200", manufacturer:"Hot Wheels",carBrand:"Mazda",       minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Mazda MX-5 Miata.jpg",               measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:20.5,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
+  { id:11, name:"'82 Toyota Supra",                   color:"#cc2200", manufacturer:"Hot Wheels",carBrand:"Toyota",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Toyota Supra.jpg",                    measurements:{wheelbase:42.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
+  { id:12, name:"'67 Shelby GT500",                   color:"#1a3a6a", manufacturer:"Hot Wheels",carBrand:"Shelby",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Shelby GT500.jpg",                    measurements:{wheelbase:43.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:18.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:18.0}},
+  { id:13, name:"Batmobile '17",                      color:"#111111", manufacturer:"Hot Wheels",carBrand:"Batmobile",   minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Batmobile.jpg",                       measurements:{wheelbase:48.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:16.2,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:18.5}},
+  { id:14, name:"'96 Porsche Carrera",                color:"#cc2200", manufacturer:"Hot Wheels",carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Porsche Carrera.jpg",                 measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
+  { id:15, name:"'20 Toyota Tacoma",                  color:"#cc2200", manufacturer:"Hot Wheels",carBrand:"Toyota",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Toyota Tacoma.jpg",                   measurements:{wheelbase:44.5,front_wheel_diameter:15.0,front_wheel_width:5.5,front_wheels_inner_distance:20.5,rear_wheel_diameter:15.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
+  { id:16, name:"'01 Custom Acura Integra GSR",       color:"#111111", manufacturer:"Hot Wheels",carBrand:"Acura",       minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Acura Integra GSR.jpg",               measurements:{wheelbase:40.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
+  { id:17, name:"Audi S4 Quattro",                    color:"#1a3a6a", manufacturer:"Hot Wheels",carBrand:"Audi",        minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Audi S4 Quattro.jpg",                 measurements:{wheelbase:43.0,front_wheel_diameter:11.2,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.2,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
+  { id:18, name:"Honda Civic SI",                     color:"#cc2200", manufacturer:"Hot Wheels",carBrand:"Honda",       minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Honda Civic SI.jpg",                  measurements:{wheelbase:43.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
+  { id:19, name:"Nissan Skyline HT 2000GT-X",         color:"#c8972a", manufacturer:"Hot Wheels",carBrand:"Nissan",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Nissan Skyline HT 2000GT-X.jpg",      measurements:{wheelbase:44.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
+  { id:20, name:"Porsche 911 Carrera RS 3.8",         color:"#eeeeee", manufacturer:"Hot Wheels",carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Porsche 911 Carrera RS 3.8.jpg",      measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:6.0,front_wheels_inner_distance:20.0,rear_wheel_diameter:11.0,rear_wheel_width:6.0,rear_wheels_inner_distance:20.0}},
+  { id:21, name:"'26 Mercedes-AMG F1",                color:"#00aa55", manufacturer:"Hot Wheels",carBrand:"Mercedes",    minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Mercedes-AMG F1.jpg",                 measurements:{wheelbase:56.5,front_wheel_diameter:11.0,front_wheel_width:5.4,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:7.2,rear_wheels_inner_distance:17.5}},
+  { id:23, name:"'26 McLaren F1",                     color:"#e87020", manufacturer:"Hot Wheels",carBrand:"McLaren",     minigtCode:null,  customPlate:false, image:"images/Hot Wheels/McLaren F1.jpg",                      measurements:{wheelbase:56.5,front_wheel_diameter:11.0,front_wheel_width:5.4,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:7.2,rear_wheels_inner_distance:17.5}},
+  { id:22, name:"Porsche 911 Carrera RS 2.7",         color:"#eeeeee", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera RS 2.7.jpg",       measurements:{wheelbase:40.5,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:18.5,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:18.5}},
+  { id:24, name:"Porsche 911 GT3 Cup (992)",          color:"#eeeeee", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:true,  image:"images/Majorette/Porsche 911 GT3 Cup (992).jpg",        measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
+  { id:25, name:"Porsche 911 Carrera S",              color:"#1a3a6a", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera S.jpg",            measurements:{wheelbase:41.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
+  { id:27, name:"Porsche 935 K3",                     color:"#eeeeee", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 935 K3.jpg",                   measurements:{wheelbase:37.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:19.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:22.0}},
+  { id:28, name:"Porsche 917 KH",                     color:"#e8d020", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 917 KH.jpg",                   measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:24.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:24.0}},
+  { id:29, name:"Ferrari 296 GTB Assetto Fiorano",    color:"#cc2200", manufacturer:"Maisto",    carBrand:"Ferrari",     minigtCode:null,  customPlate:false, image:"images/Maisto/Ferrari 296 GTB Assetto Fiorano.jpg",     measurements:{wheelbase:41.0,front_wheel_diameter:11.5,front_wheel_width:5.0,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.5,rear_wheel_width:6.0,rear_wheels_inner_distance:18.3}},
+  { id:30, name:"Lamborghini Sian FKP 37",            color:"#c8972a", manufacturer:"Maisto",    carBrand:"Lamborghini", minigtCode:null,  customPlate:false, image:"images/Maisto/Lamborghini Sian FKP 37.jpg",             measurements:{wheelbase:42.5,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:22.4,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:20.75}},
+  { id:31, name:"Porsche 911 GT2 RS",                 color:"#eeeeee", manufacturer:"Maisto",    carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Maisto/Porsche 911 GT2 RS.jpg",                  measurements:{wheelbase:38.0,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:19.0,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:17.5}},
+  { id:32, name:"Porsche Taycan Turbo S",             color:"#1a3a6a", manufacturer:"Maisto",    carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Maisto/Porsche Taycan Turbo S.jpg",              measurements:{wheelbase:45.5,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:20.5,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:18.5}},
+  { id:33, name:"'90 Volkswagen Golf Country",        color:"#2a6a2a", manufacturer:"Matchbox",  carBrand:"Volkswagen",  minigtCode:null,  customPlate:false, image:"images/Matchbox/'90 Volkswagen Golf Country.jpg",       measurements:{wheelbase:41.0,front_wheel_diameter:11.5,front_wheel_width:5.2,front_wheels_inner_distance:19.7,rear_wheel_diameter:11.5,rear_wheel_width:5.2,rear_wheels_inner_distance:19.7}},
+  { id:34, name:"Pagani Imola (Nero Oro)",            color:"#111111", manufacturer:"Tarmac",    carBrand:"Pagani",      minigtCode:null,  customPlate:true,  image:"images/Tarmac/Pagani Imola (Nero Oro).jpg",             measurements:{wheelbase:43.0,front_wheel_diameter:10.5,front_wheel_width:4.3,front_wheels_inner_distance:22.0,rear_wheel_diameter:11.0,rear_wheel_width:6.5,rear_wheels_inner_distance:19.5}},
 ];
 
 // ============================================================
@@ -586,6 +657,7 @@ const CARS = [
 function mfrColor(mfr)   { return MFR_COLORS[mfr]   || "#4f8ef7"; }
 function brandColor(b)   { return BRAND_COLORS[b]   || "#8b90a8"; }
 function hex2rgba(hex, a){ const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${a})`; }
+function hexToGlow(hex)  { const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${Math.round(r*.45)},${Math.round(g*.45)},${Math.round(b*.45)},0.75)`; }
 
 function buildScad(car) {
   const m = car.measurements;
@@ -689,7 +761,7 @@ function closeModalDirect() {
   document.getElementById("modal-overlay").classList.remove("open");
   document.body.style.overflow = "";
 }
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeModalDirect(); });
+
 
 function copyScadFromModal() {
   if (!currentModalCar) return;
@@ -705,11 +777,63 @@ function copyScadFromModal() {
 }
 
 // ============================================================
+// DOMINANT COLOR — set manually per car via car.color field
+// ============================================================
+
+// ============================================================
+// FEEDBACK MODAL
+// ============================================================
+function openFeedback() {
+  document.getElementById("feedback-overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeFeedback(e) {
+  if (e.target === document.getElementById("feedback-overlay")) closeFeedbackDirect();
+}
+function closeFeedbackDirect() {
+  document.getElementById("feedback-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+// Handle Formspree AJAX submit
+document.getElementById("feedback-form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = form.querySelector('button[type="submit"]');
+  btn.textContent = "Sending...";
+  btn.disabled = true;
+  try {
+    const res = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { Accept: "application/json" }
+    });
+    if (res.ok) {
+      form.style.display = "none";
+      document.getElementById("feedback-thanks").style.display = "block";
+      setTimeout(closeFeedbackDirect, 2500);
+    } else {
+      btn.textContent = "Error — try again";
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = "Error — try again";
+    btn.disabled = false;
+  }
+});
+
+// ============================================================
 // CARD RENDERER
 // ============================================================
 function renderCard(car) {
   const mc = mfrColor(car.manufacturer);
   const bc = brandColor(car.carBrand);
+
+  // Use manual color field for glow; fallback to no glow
+  const glowColor = car.color
+    ? hexToGlow(car.color)
+    : null;
+  const glowStyle = glowColor ? `--card-glow:${glowColor}` : '';
 
   const imgHtml = car.image
     ? `<img src="${car.image}" alt="${car.name}" loading="lazy">`
@@ -719,8 +843,8 @@ function renderCard(car) {
   if (car.minigtCode) metaHtml += `<span class="minigt-code">#${car.minigtCode}</span>`;
   if (car.customPlate) metaHtml += `<span class="custom-plate-badge">Custom Plate</span>`;
 
-  return `<div class="card" style="--mfr-color:${mc}" onclick="openModal(${car.id})">
-    <div class="card-img">
+  return `<div class="card" data-id="${car.id}" style="--mfr-color:${mc}" onclick="openModal(${car.id})">
+    <div class="card-img" ${glowStyle ? `style="${glowStyle}"` : ''}>
       ${imgHtml}
       <div class="mfr-badge" style="border-color:${hex2rgba(mc,0.4)}">${car.manufacturer}</div>
     </div>
@@ -744,6 +868,19 @@ function populateFilters() {
   document.getElementById("total-count").textContent = CARS.length;
 }
 
+populateFilters();
+renderGrid();
+document.getElementById("search").addEventListener("input", renderGrid);
+document.getElementById("filter-manufacturer").addEventListener("change", renderGrid);
+document.getElementById("filter-brand").addEventListener("change", renderGrid);
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    closeModalDirect();
+    closeFeedbackDirect();
+  }
+});
+
 function renderGrid() {
   const q     = document.getElementById("search").value.toLowerCase();
   const mfr   = document.getElementById("filter-manufacturer").value;
@@ -760,12 +897,6 @@ function renderGrid() {
   }
   grid.innerHTML = filtered.map(renderCard).join("");
 }
-
-populateFilters();
-renderGrid();
-document.getElementById("search").addEventListener("input", renderGrid);
-document.getElementById("filter-manufacturer").addEventListener("change", renderGrid);
-document.getElementById("filter-brand").addEventListener("change", renderGrid);
 </script>
 </body>
 </html>
