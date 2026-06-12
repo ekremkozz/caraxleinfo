@@ -427,7 +427,25 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-sm); padding: 8px 12px;
     text-align: center;
+    position: relative;
   }
+  .measure:hover .copy-val-btn { opacity: 1; }
+  .copy-val-btn {
+    position: absolute;
+    top: 5px; right: 5px;
+    width: 20px; height: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 5px;
+    color: var(--text3);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity .15s, color .15s, background .15s;
+    padding: 0;
+  }
+  .copy-val-btn:hover { color: var(--accent); background: var(--surface2); }
+  .copy-val-btn.copied { color: var(--green); opacity: 1; }
   .measure.front { border-left: 2px solid var(--accent); }
   .measure.rear  { border-left: 2px solid var(--accent2); }
   .measure.wb    { grid-column: span 2; border-left: 2px solid var(--green); }
@@ -642,18 +660,11 @@
       <div class="modal-meta" id="modal-meta"></div>
       <div class="measures-grid" id="modal-measures"></div>
       <div class="modal-actions">
-        <button class="btn-scad" id="modal-scad-btn" onclick="copyScadFromModal()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2"/>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-          Copy SCAD
-        </button>
-        <a href="https://makerworld.com/en/models/1895553-ikea-samla-65l-filament-rack-system#profileId-2030875" target="_blank" class="btn-makerworld-modal">
+        <a href="https://makerworld.com/en/models/1895553-ikea-samla-65l-filament-rack-system#profileId-2030875" target="_blank" class="btn-makerworld-modal" style="width:100%;justify-content:center">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
           </svg>
-          Open in MakerWorld
+          Open Parametric Model
         </a>
       </div>
     </div>
@@ -836,7 +847,7 @@ const CARS = [
   { id:1,  name:"Porsche 911 GT3 R #77",       color:"#2a7a2a", manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"889", customPlate:false, image:"images/MiniGT/Porsche 911 GT3 R(992).jpg",              measurements:{wheelbase:39.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.5}},
   { id:2,  name:"Porsche 911 (992) GT3 RS",     color:"#111111", manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"681", customPlate:false, image:"images/MiniGT/Porsche 911 (992) GT3 RS.jpg",            measurements:{wheelbase:38.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.5}},
   { id:3,  name:"Toyota GR86 LB\u2605Nation",   color:"#cc2200", manufacturer:"Mini GT",   carBrand:"Toyota",      minigtCode:"885", customPlate:false, image:"images/MiniGT/Toyota GR86 LB\u2605Nation.jpg",          measurements:{wheelbase:40.0,front_wheel_diameter:10.0,front_wheel_width:4.5,front_wheels_inner_distance:20.0,rear_wheel_diameter:10.0,rear_wheel_width:4.8,rear_wheels_inner_distance:20.0}},
-  { id:4,  name:"Porsche 911 Dakar",            color:"#080808", manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"958", customPlate:false, image:"images/MiniGT/Porsche 911 Dakar.jpg",                   measurements:{wheelbase:39.0,front_wheel_diameter:11.5,front_wheel_width:4.1,front_wheels_inner_distance:20.5,rear_wheel_diameter:12.0,rear_wheel_width:5.1,rear_wheels_inner_distance:19.2}},
+  { id:4,  name:"Porsche 911 Dakar",            color:"#111111", manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"958", customPlate:false, image:"images/MiniGT/Porsche 911 Dakar.jpg",                   measurements:{wheelbase:39.0,front_wheel_diameter:11.5,front_wheel_width:4.1,front_wheels_inner_distance:20.5,rear_wheel_diameter:12.0,rear_wheel_width:5.1,rear_wheels_inner_distance:19.2}},
   { id:5,  name:"Nissan GT-R Nismo 2024 NISMO", color:"#4a5568", manufacturer:"Mini GT",   carBrand:"Nissan",      minigtCode:"868", customPlate:false, image:"images/MiniGT/Nissan GT-R Nismo 2024.jpg",              measurements:{wheelbase:43.0,front_wheel_diameter:11.2,front_wheel_width:4.5,front_wheels_inner_distance:20.5,rear_wheel_diameter:11.2,rear_wheel_width:4.5,rear_wheels_inner_distance:21.5}},
   { id:6,  name:"Honda Civic Type R",   color:"#eeeeee", manufacturer:"Mini GT",   carBrand:"Honda",       minigtCode:"721", customPlate:false, image:"images/MiniGT/Honda Civic Type R.jpg",                  measurements:{wheelbase:43.0,front_wheel_diameter:11.0,front_wheel_width:4.5,front_wheels_inner_distance:20.3,rear_wheel_diameter:11.0,rear_wheel_width:4.5,rear_wheels_inner_distance:20.3}},
   { id:7,  name:"Lamborghini Countach LB-WORKS",color:"#eeeeee", manufacturer:"Mini GT",   carBrand:"Lamborghini", minigtCode:"966", customPlate:false, image:"images/MiniGT/Lamborghini Countach LB-WORKS.jpg",       measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:4.0,front_wheels_inner_distance:22.3,rear_wheel_diameter:11.0,rear_wheel_width:5.2,rear_wheels_inner_distance:22.3}},
@@ -857,10 +868,10 @@ const CARS = [
   { id:21, name:"'26 Mercedes-AMG F1",                color:"#00aa55", manufacturer:"Hot Wheels",carBrand:"Mercedes",    minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Mercedes-AMG F1.jpg",                 measurements:{wheelbase:56.5,front_wheel_diameter:11.0,front_wheel_width:5.4,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:7.2,rear_wheels_inner_distance:17.5}},
   { id:23, name:"'26 McLaren F1",                     color:"#e87020", manufacturer:"Hot Wheels",carBrand:"McLaren",     minigtCode:null,  customPlate:false, image:"images/Hot Wheels/McLaren F1.jpg",                      measurements:{wheelbase:56.5,front_wheel_diameter:11.0,front_wheel_width:5.4,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:7.2,rear_wheels_inner_distance:17.5}},
   { id:22, name:"Porsche 911 Carrera RS 2.7",         color:"#eeeeee", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera RS 2.7.jpg",       measurements:{wheelbase:40.5,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:18.5,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:18.5}},
-  { id:24, name:"Porsche 911 GT3 Cup (992)",          color:"#4499b0", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:true,  image:"images/Majorette/Porsche 911 GT3 Cup (992).jpg",        measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
-  { id:25, name:"Porsche 911 Carrera S",              color:"#3a9155", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera S.jpg",            measurements:{wheelbase:41.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
+  { id:24, name:"Porsche 911 GT3 Cup (992)",          color:"#eeeeee", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:true,  image:"images/Majorette/Porsche 911 GT3 Cup (992).jpg",        measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
+  { id:25, name:"Porsche 911 Carrera S",              color:"#1a3a6a", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera S.jpg",            measurements:{wheelbase:41.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
   { id:27, name:"Porsche 935 K3",                     color:"#eeeeee", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 935 K3.jpg",                   measurements:{wheelbase:37.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:19.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:22.0}},
-  { id:28, name:"Porsche 917 KH",                     color:"#3e5cc5", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 917 KH.jpg",                   measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:24.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:24.0}},
+  { id:28, name:"Porsche 917 KH",                     color:"#e8d020", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 917 KH.jpg",                   measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:24.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:24.0}},
   { id:29, name:"Ferrari 296 GTB Assetto Fiorano",    color:"#cc2200", manufacturer:"Maisto",    carBrand:"Ferrari",     minigtCode:null,  customPlate:false, image:"images/Maisto/Ferrari 296 GTB Assetto Fiorano.jpg",     measurements:{wheelbase:41.0,front_wheel_diameter:11.5,front_wheel_width:5.0,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.5,rear_wheel_width:6.0,rear_wheels_inner_distance:18.3}},
   { id:30, name:"Lamborghini Sian FKP 37",            color:"#c8972a", manufacturer:"Maisto",    carBrand:"Lamborghini", minigtCode:null,  customPlate:false, image:"images/Maisto/Lamborghini Sian FKP 37.jpg",             measurements:{wheelbase:42.5,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:22.4,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:20.75}},
   { id:31, name:"Porsche 911 GT2 RS",                 color:"#eeeeee", manufacturer:"Maisto",    carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Maisto/Porsche 911 GT2 RS.jpg",                  measurements:{wheelbase:38.0,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:19.0,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:17.5}},
@@ -949,38 +960,54 @@ function openModal(id) {
   const m = car.measurements;
   document.getElementById("modal-measures").innerHTML = `
     <div class="measure wb">
+      <button class="copy-val-btn" onclick="copyVal(${m.wheelbase},'wb')" title="Copy">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
       <div class="measure-label">Wheelbase</div>
       <div class="measure-val">${m.wheelbase}<span class="unit">mm</span></div>
     </div>
     <div class="measure front">
+      <button class="copy-val-btn" onclick="copyVal(${m.front_wheel_diameter},'fd')" title="Copy">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
       <div class="measure-label">Front Diameter</div>
       <div class="measure-val">${m.front_wheel_diameter}<span class="unit">mm</span></div>
     </div>
     <div class="measure rear">
+      <button class="copy-val-btn" onclick="copyVal(${m.rear_wheel_diameter},'rd')" title="Copy">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
       <div class="measure-label">Rear Diameter</div>
       <div class="measure-val">${m.rear_wheel_diameter}<span class="unit">mm</span></div>
     </div>
     <div class="measure front">
+      <button class="copy-val-btn" onclick="copyVal(${m.front_wheel_width},'fw')" title="Copy">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
       <div class="measure-label">Front Width</div>
       <div class="measure-val">${m.front_wheel_width}<span class="unit">mm</span></div>
     </div>
     <div class="measure rear">
+      <button class="copy-val-btn" onclick="copyVal(${m.rear_wheel_width},'rw')" title="Copy">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
       <div class="measure-label">Rear Width</div>
       <div class="measure-val">${m.rear_wheel_width}<span class="unit">mm</span></div>
     </div>
     <div class="measure front">
+      <button class="copy-val-btn" onclick="copyVal(${m.front_wheels_inner_distance},'fi')" title="Copy">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
       <div class="measure-label">Front Inner Gap</div>
       <div class="measure-val">${m.front_wheels_inner_distance}<span class="unit">mm</span></div>
     </div>
     <div class="measure rear">
+      <button class="copy-val-btn" onclick="copyVal(${m.rear_wheels_inner_distance},'ri')" title="Copy">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
       <div class="measure-label">Rear Inner Gap</div>
       <div class="measure-val">${m.rear_wheels_inner_distance}<span class="unit">mm</span></div>
     </div>`;
-
-  // reset button
-  const btn = document.getElementById("modal-scad-btn");
-  btn.classList.remove("copied");
-  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy SCAD`;
 
   document.getElementById("modal-overlay").classList.add("open");
   document.body.style.overflow = "hidden";
@@ -995,17 +1022,18 @@ function closeModalDirect() {
 }
 
 
-function copyScadFromModal() {
-  if (!currentModalCar) return;
-  navigator.clipboard.writeText(buildScad(currentModalCar));
-  showToast("SCAD parameters copied — paste into MakerWorld!");
-  const btn = document.getElementById("modal-scad-btn");
-  btn.classList.add("copied");
-  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Copied!`;
-  setTimeout(() => {
-    btn.classList.remove("copied");
-    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy SCAD`;
-  }, 2200);
+function copyVal(val, key) {
+  navigator.clipboard.writeText(String(val));
+  showToast(`Copied: ${val} mm`);
+  const btn = document.querySelector(`.copy-val-btn[onclick*="'${key}'"]`);
+  if (btn) {
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+    }, 1800);
+  }
 }
 
 // ============================================================
