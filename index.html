@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1/64 Stand Builder â€” Axle Database</title>
+<title>1/64 Model Car Chassis Info</title>
 <style>
   :root {
     --bg: #0f1117;
     --surface: #1a1d27;
     --surface2: #22263a;
     --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.15);
+    --border2: rgba(255,255,255,0.18);
     --accent: #4f8ef7;
     --accent2: #7c5cfc;
     --text: #e8eaf2;
@@ -19,6 +19,32 @@
     --green: #3ecf8e;
     --radius: 10px;
     --radius-lg: 14px;
+
+    /* === MANUFACTURER COLORS (edit freely) === */
+    --color-hot-wheels:  #e8392a;
+    --color-mini-gt:     #00aaff;
+    --color-majorette:   #f59e0b;
+    --color-maisto:      #a855f7;
+    --color-matchbox:    #22c55e;
+    --color-tarmac:      #f97316;
+
+    /* === CAR BRAND COLORS (edit freely) === */
+    --color-porsche:     #c8972a;
+    --color-toyota:      #e8392a;
+    --color-nissan:      #6366f1;
+    --color-honda:       #e8392a;
+    --color-lamborghini: #f59e0b;
+    --color-mclaren:     #f97316;
+    --color-datsun:      #8b5cf6;
+    --color-mazda:       #ef4444;
+    --color-shelby:      #3b82f6;
+    --color-batmobile:   #6b7280;
+    --color-acura:       #dc2626;
+    --color-audi:        #9ca3af;
+    --color-mercedes:    #10b981;
+    --color-ferrari:     #ef4444;
+    --color-volkswagen:  #3b82f6;
+    --color-pagani:      #a855f7;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,6 +56,7 @@
     min-height: 100vh;
   }
 
+  /* ── HEADER ── */
   header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -40,36 +67,55 @@
     justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 200;
   }
+
+  .header-left { display: flex; align-items: center; gap: 12px; }
 
   .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--text2);
+    text-transform: uppercase;
+  }
+  .logo svg { color: var(--accent); flex-shrink: 0; }
+
+  .site-title {
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
+    color: var(--text);
     letter-spacing: -0.3px;
   }
-  .logo svg { color: var(--accent); }
 
-  .header-right { display: flex; align-items: center; gap: 10px; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
 
   .btn-ghost {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 14px;
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 13px;
     border: 1px solid var(--border2);
     border-radius: var(--radius);
     background: transparent;
     color: var(--text2);
-    font-size: 13px;
+    font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
     text-decoration: none;
     transition: all .15s;
+    white-space: nowrap;
   }
   .btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--accent); }
+
+  .btn-makerworld {
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+  }
+  .btn-makerworld:hover { opacity: .88; color: #fff; border-color: transparent; }
 
   .stat-pill {
     padding: 5px 12px;
@@ -78,31 +124,25 @@
     border-radius: 999px;
     font-size: 12px;
     color: var(--text2);
+    white-space: nowrap;
   }
   .stat-pill span { color: var(--accent); font-weight: 600; }
 
+  /* ── FILTER BAR ── */
   .filter-bar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 12px 24px;
+    padding: 10px 24px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     align-items: center;
   }
 
-  .search-wrap {
-    position: relative;
-    flex: 1;
-    min-width: 200px;
-  }
+  .search-wrap { position: relative; flex: 1; min-width: 180px; }
   .search-wrap svg {
-    position: absolute;
-    left: 11px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text3);
-    pointer-events: none;
+    position: absolute; left: 11px; top: 50%;
+    transform: translateY(-50%); color: var(--text3); pointer-events: none;
   }
 
   input[type="text"], select {
@@ -111,232 +151,260 @@
     border-radius: var(--radius);
     color: var(--text);
     font-size: 13px;
-    padding: 8px 12px;
+    padding: 7px 12px;
     outline: none;
     transition: border-color .15s;
   }
   input[type="text"] { padding-left: 34px; width: 100%; }
   input[type="text"]:focus, select:focus { border-color: var(--accent); }
   select {
-    cursor: pointer;
-    padding-right: 28px;
-    appearance: none;
+    cursor: pointer; padding-right: 28px; appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b90a8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
+    background-repeat: no-repeat; background-position: right 10px center;
   }
 
-  .filter-count {
-    font-size: 12px;
-    color: var(--text3);
-    margin-left: auto;
-    white-space: nowrap;
-  }
+  .filter-count { font-size: 12px; color: var(--text3); white-space: nowrap; }
 
+  /* ── GRID ── */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
-    padding: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    padding: 20px 24px;
   }
 
+  /* ── CARD ── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    transition: border-color .15s, transform .15s;
-  }
-  .card:hover { border-color: var(--border2); transform: translateY(-2px); }
-
-  .card-img {
-    height: 150px;
-    background: var(--surface2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    cursor: pointer;
+    transition: border-color .15s, transform .15s, box-shadow .15s;
     position: relative;
   }
-  .card-img img { width: 100%; height: 100%; object-fit: cover; }
+  .card:hover {
+    border-color: var(--border2);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+
+  /* colored top stripe per manufacturer */
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--mfr-color, var(--accent));
+    z-index: 1;
+  }
+
+  .card-img {
+    height: 130px;
+    background: var(--surface2);
+    display: flex; align-items: flex-end; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .card-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    object-position: center;
+  }
   .card-img .placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    color: var(--text3);
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px; color: var(--text3); padding-bottom: 16px;
   }
   .card-img .placeholder span { font-size: 11px; }
 
-  .card-img .brand-badge {
+  .mfr-badge {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    bottom: 8px; left: 8px;
     padding: 3px 8px;
     border-radius: 999px;
-    font-size: 10px;
-    font-weight: 600;
-    background: rgba(79,142,247,0.15);
-    color: var(--accent);
-    border: 1px solid rgba(79,142,247,0.3);
-    backdrop-filter: blur(8px);
+    font-size: 10px; font-weight: 700;
+    backdrop-filter: blur(12px);
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
+    z-index: 2;
   }
 
-  .card-body { padding: 14px; }
+  .card-body { padding: 12px 14px 14px; }
 
   .car-name {
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 3px;
-    letter-spacing: -0.2px;
+    font-size: 13px; font-weight: 600; margin-bottom: 5px;
+    letter-spacing: -0.1px; line-height: 1.3;
   }
 
   .car-meta {
-    font-size: 12px;
-    color: var(--text2);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 0;
   }
-  .car-meta .dot { color: var(--text3); }
+
+  /* brand pill */
+  .brand-pill {
+    display: inline-flex; align-items: center;
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 999px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--brand-color, var(--text2));
+  }
 
   .custom-plate-badge {
-    display: inline-block;
-    font-size: 10px;
-    padding: 2px 7px;
+    display: inline-block; font-size: 10px; padding: 2px 7px;
     border-radius: 999px;
-    background: rgba(62,207,142,0.12);
-    color: #6ee7b7;
-    border: 1px solid rgba(62,207,142,0.25);
-    font-weight: 500;
-    margin-left: 6px;
+    background: rgba(62,207,142,0.12); color: #6ee7b7;
+    border: 1px solid rgba(62,207,142,0.25); font-weight: 500;
+  }
+
+  /* Mini GT code badge */
+  .minigt-code {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 7px; border-radius: 999px;
+    background: rgba(0,170,255,0.12); color: #7dd3fc;
+    border: 1px solid rgba(0,170,255,0.25);
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 500;
+    align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 18px;
+    width: 100%; max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalIn .2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes modalIn {
+    from { transform: scale(.92); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .modal-img {
+    width: 100%; height: 220px;
+    background: var(--surface2);
+    overflow: hidden; position: relative;
+    border-radius: 18px 18px 0 0;
+  }
+  .modal-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+  .modal-img .placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 10px; color: var(--text3);
+  }
+
+  /* colored top stripe on modal */
+  .modal-img::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--mfr-color, var(--accent));
+    z-index: 1;
+  }
+
+  .modal-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 30px; height: 30px;
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50%; color: #fff; font-size: 16px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    z-index: 10; transition: background .15s;
+    backdrop-filter: blur(4px);
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.15); }
+
+  .modal-body { padding: 20px 22px 24px; }
+
+  .modal-title {
+    font-size: 19px; font-weight: 700; letter-spacing: -0.4px;
+    margin-bottom: 8px;
+  }
+
+  .modal-meta {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 20px;
   }
 
   .measures-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    margin-bottom: 14px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 7px; margin-bottom: 16px;
   }
 
   .measure {
     background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 10px;
+    border-radius: 8px; padding: 9px 12px;
+    text-align: center;
   }
   .measure.front { border-left: 2px solid var(--accent); }
   .measure.rear  { border-left: 2px solid var(--accent2); }
   .measure.wb    { grid-column: span 2; border-left: 2px solid var(--green); }
 
-  .measures-section-label {
-    font-size: 10px;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .measures-section-label::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-  }
-  .measures-section-label.front::before { background: var(--accent); }
-  .measures-section-label.rear::before  { background: var(--accent2); }
-  .measures-section-label.wb::before    { background: var(--green); }
-
   .measure-label {
-    font-size: 10px;
-    color: var(--text3);
-    margin-bottom: 3px;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
+    font-size: 9px; color: var(--text3);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
   }
-
   .measure-val {
-    font-size: 14px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    color: var(--text);
+    font-size: 15px; font-weight: 700;
+    font-variant-numeric: tabular-nums; color: var(--text);
   }
   .measure-val .unit {
-    font-size: 10px;
-    font-weight: 400;
-    color: var(--text3);
-    margin-left: 2px;
+    font-size: 10px; font-weight: 400; color: var(--text3); margin-left: 2px;
   }
 
   .btn-scad {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    padding: 9px 14px;
+    width: 100%; display: flex; align-items: center;
+    justify-content: center; gap: 7px;
+    padding: 11px 14px;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border: none;
-    border-radius: var(--radius);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity .15s, transform .1s;
+    border: none; border-radius: var(--radius);
+    color: #fff; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: opacity .15s, transform .1s;
   }
   .btn-scad:hover { opacity: .9; }
   .btn-scad:active { transform: scale(.97); }
   .btn-scad.copied { background: linear-gradient(135deg, var(--green), #059669); }
 
+  /* ── EMPTY ── */
   .empty {
-    grid-column: 1/-1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 80px 20px;
-    color: var(--text3);
-    gap: 12px;
+    grid-column: 1/-1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 80px 20px; color: var(--text3); gap: 12px;
   }
   .empty svg { opacity: .3; }
   .empty p { font-size: 14px; }
 
-  .contribute {
-    margin: 0 24px 24px;
-    background: linear-gradient(135deg, rgba(79,142,247,0.08), rgba(124,92,252,0.08));
-    border: 1px solid rgba(79,142,247,0.2);
-    border-radius: var(--radius-lg);
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 28px 20px;
+    color: var(--text3); font-size: 12px; line-height: 1.7;
+    border-top: 1px solid var(--border); margin-top: 8px;
   }
-  .contribute-text { font-size: 13px; color: var(--text2); }
-  .contribute-text strong { color: var(--text); }
+  footer a { color: var(--text2); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
 
+  /* ── TOAST ── */
   .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--surface);
-    border: 1px solid var(--green);
-    color: var(--green);
-    padding: 10px 18px;
-    border-radius: var(--radius);
-    font-size: 13px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transform: translateY(80px);
-    opacity: 0;
-    transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--surface); border: 1px solid var(--green);
+    color: var(--green); padding: 10px 18px;
+    border-radius: var(--radius); font-size: 13px; font-weight: 500;
+    display: flex; align-items: center; gap: 8px;
+    transform: translateY(80px); opacity: 0;
+    transition: all .25s cubic-bezier(0.34,1.56,0.64,1);
     z-index: 999;
   }
   .toast.show { transform: translateY(0); opacity: 1; }
@@ -345,61 +413,84 @@
     .filter-bar { padding: 10px 16px; }
     .grid { padding: 16px; gap: 12px; }
     header { padding: 0 16px; }
+    .site-title { font-size: 13px; }
+    .modal { max-height: 95vh; }
   }
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
-  <div class="logo">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/>
-      <circle cx="12" cy="17" r="3"/>
-      <circle cx="18" cy="17" r="3"/>
-      <path d="M11 17h4"/>
-      <path d="M9 5H5"/>
-    </svg>
-    1/64 Stand Builder
+  <div class="header-left">
+    <div class="logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/>
+        <circle cx="12" cy="17" r="3"/><circle cx="18" cy="17" r="3"/>
+        <path d="M11 17h4"/><path d="M9 5H5"/>
+      </svg>
+    </div>
+    <span class="site-title">1/64 Model Car Chassis Info</span>
   </div>
   <div class="header-right">
     <div class="stat-pill">Total: <span id="total-count">0</span> cars</div>
+    <a href="https://makerworld.com/en/models/1289843" target="_blank" class="btn-ghost btn-makerworld">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+      </svg>
+      MakerWorld Model
+    </a>
     <a href="https://github.com/ekremkozz/caraxleinfo" target="_blank" class="btn-ghost">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
       GitHub
+    </a>
+    <a href="mailto:?subject=1/64%20Chassis%20Info%20-%20Car%20Measurements" class="btn-ghost">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      Submit
     </a>
   </div>
 </header>
 
+<!-- FILTERS -->
 <div class="filter-bar">
   <div class="search-wrap">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
     </svg>
-    <input type="text" id="search" placeholder="Search by name, brand or code...">
+    <input type="text" id="search" placeholder="Search by name or brand...">
   </div>
-  <select id="filter-manufacturer">
-    <option value="">All manufacturers</option>
-  </select>
-  <select id="filter-brand">
-    <option value="">All car brands</option>
-  </select>
+  <select id="filter-manufacturer"><option value="">All manufacturers</option></select>
+  <select id="filter-brand"><option value="">All car brands</option></select>
   <div class="filter-count" id="filter-count">0 cars</div>
 </div>
 
+<!-- GRID -->
 <div class="grid" id="grid"></div>
 
-<div class="contribute">
-  <div class="contribute-text">
-    <strong>Know your car's measurements?</strong> Submit your data to help grow the database.
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-img" id="modal-img">
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-meta" id="modal-meta"></div>
+      <div class="measures-grid" id="modal-measures"></div>
+      <button class="btn-scad" id="modal-scad-btn" onclick="copyScadFromModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copy SCAD Parameters
+      </button>
+    </div>
   </div>
-  <a href="mailto:?subject=1/64%20Stand%20Builder%20-%20Car%20Measurements" class="btn-ghost">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </svg>
-    Submit Measurements
-  </a>
 </div>
 
+<!-- TOAST -->
 <div class="toast" id="toast">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
     <path d="M20 6 9 17l-5-5"/>
@@ -407,594 +498,95 @@
   <span id="toast-msg">Copied!</span>
 </div>
 
+<!-- FOOTER -->
+<footer>
+  Made by <a href="https://github.com/ekremkozz" target="_blank">Ekrem Uyar</a> &amp;
+  <a href="https://claude.ai" target="_blank">Claude (Anthropic)</a><br>
+  Data measured by hand. Use at your own risk. All model car brands are trademarks of their respective owners.
+</footer>
+
 <script>
 // ============================================================
-// DATABASE â€” Add new cars to this array
+// MANUFACTURER COLORS  (CSS variable key → hex)
+// ============================================================
+const MFR_COLORS = {
+  "Hot Wheels":  "#e8392a",
+  "Mini GT":     "#00aaff",
+  "Majorette":   "#f59e0b",
+  "Maisto":      "#a855f7",
+  "Matchbox":    "#22c55e",
+  "Tarmac":      "#f97316",
+};
+
+// ============================================================
+// CAR BRAND COLORS
+// ============================================================
+const BRAND_COLORS = {
+  "Porsche":     "#c8972a",
+  "Toyota":      "#e8392a",
+  "Nissan":      "#6366f1",
+  "Honda":       "#e8392a",
+  "Lamborghini": "#f59e0b",
+  "McLaren":     "#f97316",
+  "Datsun":      "#8b5cf6",
+  "Mazda":       "#ef4444",
+  "Shelby":      "#3b82f6",
+  "Batmobile":   "#6b7280",
+  "Acura":       "#dc2626",
+  "Audi":        "#9ca3af",
+  "Mercedes":    "#10b981",
+  "Ferrari":     "#ef4444",
+  "Volkswagen":  "#3b82f6",
+  "Pagani":      "#a855f7",
+};
+
+// ============================================================
+// DATABASE
 // ============================================================
 const CARS = [
-  {
-    id: 1,
-    name: "Porsche 911 GT3 R #77 (889)",
-    manufacturer: "Mini GT",
-    carBrand: "Porsche",
-    customPlate: false,
-    image: "images/MiniGT/Porsche 911 GT3 R(992).jpg",
-    measurements: {
-      wheelbase: 39.0,
-      front_wheel_diameter: 12.0,
-      front_wheel_width: 5.2,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 5.2,
-      rear_wheels_inner_distance: 21.5,
-    }
-  },
-  {
-    id: 2,
-    name: "Porsche 911 (992) GT3 RS (681)",
-    manufacturer: "Mini GT",
-    carBrand: "Porsche",
-    customPlate: false,
-    image: "images/MiniGT/Porsche 911 (992) GT3 RS.jpg",
-    measurements: {
-      wheelbase: 38.0,
-      front_wheel_diameter: 12.0,
-      front_wheel_width: 5.2,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 5.2,
-      rear_wheels_inner_distance: 21.5,
-    }
-  },
-  {
-    id: 3,
-    name: "Toyota GR86 LB★Nation (885)",
-    manufacturer: "Mini GT",
-    carBrand: "Toyota",
-    customPlate: false,
-    image: "images/MiniGT/Toyota GR86 LB★Nation.jpg",
-    measurements: {
-      wheelbase: 40.0,
-      front_wheel_diameter: 10.0,
-      front_wheel_width: 4.5,
-      front_wheels_inner_distance: 20.0,
-      rear_wheel_diameter: 10.0,
-      rear_wheel_width: 4.8,
-      rear_wheels_inner_distance: 20.0,
-    }
-  },
-  {
-    id: 4,
-    name: "Porsche 911 Dakar (958)",
-    manufacturer: "Mini GT",
-    carBrand: "Porsche",
-    customPlate: false,
-    image: "images/MiniGT/Porsche 911 Dakar.jpg",
-    measurements: {
-      wheelbase: 39.0,
-      front_wheel_diameter: 11.5,
-      front_wheel_width: 4.1,
-      front_wheels_inner_distance: 20.5,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 5.1,
-      rear_wheels_inner_distance: 19.2,
-    }
-  },
-  {
-    id: 5,
-    name: "Nissan GT-R Nismo 2024 NISMO (868)",
-    manufacturer: "Mini GT",
-    carBrand: "Nissan",
-    customPlate: false,
-    image: "images/MiniGT/Nissan GT-R Nismo 2024.jpg",
-    measurements: {
-      wheelbase: 43.0,
-      front_wheel_diameter: 11.2,
-      front_wheel_width: 4.5,
-      front_wheels_inner_distance: 20.5,
-      rear_wheel_diameter: 11.2,
-      rear_wheel_width: 4.5,
-      rear_wheels_inner_distance: 21.5,
-    }
-  },
-  {
-    id: 6,
-    name: "Honda Civic Type R #2 2023 (721)",
-    manufacturer: "Mini GT",
-    carBrand: "Honda",
-    customPlate: false,
-    image: "images/MiniGT/Honda Civic Type R.jpg",
-    measurements: {
-      wheelbase: 43.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 4.5,
-      front_wheels_inner_distance: 20.3,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 4.5,
-      rear_wheels_inner_distance: 20.3,
-    }
-  },
-  {
-    id: 7,
-    name: "Lamborghini Countach LB-WORKS (966)",
-    manufacturer: "Mini GT",
-    carBrand: "Lamborghini",
-    customPlate: false,
-    image: "images/MiniGT/Lamborghini Countach LB-WORKS.jpg",
-    measurements: {
-      wheelbase: 39.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 4.0,
-      front_wheels_inner_distance: 22.3,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 5.2,
-      rear_wheels_inner_distance: 22.3,
-    }
-  },
-  {
-    id: 8,
-    name: "McLaren 720S GT3 Evo (984)",
-    manufacturer: "Mini GT",
-    carBrand: "McLaren",
-    customPlate: false,
-    image: "images/MiniGT/McLaren 720S GT3 Evo.jpg",
-    measurements: {
-      wheelbase: 42.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.0,
-      front_wheels_inner_distance: 21.2,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 6.0,
-      rear_wheels_inner_distance: 20.5,
-    }
-  },
-  {
-    id: 9,
-    name: "'71 Datsun 510",
-    manufacturer: "Hot Wheels",
-    carBrand: "Datsun",
-    customPlate: false,
-    image: "images/Hot Wheels/Datsun 510.jpg",
-    measurements: {
-      wheelbase: 42.5,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.5,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 5.5,
-      rear_wheels_inner_distance: 21.0,
-    }
-  },
-  {
-    id: 10,
-    name: "'91 Mazda MX-5 Miata",
-    manufacturer: "Hot Wheels",
-    carBrand: "Mazda",
-    customPlate: false,
-    image: "images/Hot Wheels/Mazda MX-5 Miata.jpg",
-    measurements: {
-      wheelbase: 39.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.5,
-      front_wheels_inner_distance: 20.5,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 5.5,
-      rear_wheels_inner_distance: 20.5,
-    }
-  },
-  {
-    id: 11,
-    name: "'82 Toyota Supra",
-    manufacturer: "Hot Wheels",
-    carBrand: "Toyota",
-    customPlate: false,
-    image: "images/Hot Wheels/Toyota Supra.jpg",
-    measurements: {
-      wheelbase: 42.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.5,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 5.5,
-      rear_wheels_inner_distance: 20.5,
-    }
-  },
-  {
-    id: 12,
-    name: "'67 Shelby GT500",
-    manufacturer: "Hot Wheels",
-    carBrand: "Shelby",
-    customPlate: false,
-    image: "images/Hot Wheels/Shelby GT500.jpg",
-    measurements: {
-      wheelbase: 43.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.5,
-      front_wheels_inner_distance: 18.0,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 5.5,
-      rear_wheels_inner_distance: 18.0,
-    }
-  },
-  {
-    id: 13,
-    name: "Batmobile '17",
-    manufacturer: "Hot Wheels",
-    carBrand: "Batmobile",
-    customPlate: false,
-    image: "images/Hot Wheels/Batmobile.jpg",
-    measurements: {
-      wheelbase: 48.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.5,
-      front_wheels_inner_distance: 16.2,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 5.5,
-      rear_wheels_inner_distance: 18.5,
-    }
-  },
-  {
-    id: 14,
-    name: "'96 Porsche Carrera",
-    manufacturer: "Hot Wheels",
-    carBrand: "Porsche",
-    customPlate: false,
-    image: "images/Hot Wheels/Porsche Carrera.jpg",
-    measurements: {
-      wheelbase: 39.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.5,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 5.5,
-      rear_wheels_inner_distance: 21.0,
-    }
-  },
-  {
-    id: 15,
-    name: "'20 Toyota Tacoma",
-    manufacturer: "Hot Wheels",
-    carBrand: "Toyota",
-    customPlate: false,
-    image: "images/Hot Wheels/Toyota Tacoma.jpg",
-    measurements: {
-      wheelbase: 44.5,
-      front_wheel_diameter: 15.0,
-      front_wheel_width: 5.5,
-      front_wheels_inner_distance: 20.5,
-      rear_wheel_diameter: 15.0,
-      rear_wheel_width: 5.5,
-      rear_wheels_inner_distance: 20.5,
-    }
-  },
-  {
-    id: 16,
-    name: "'01 Custom Acura Integra GSR",
-    manufacturer: "Hot Wheels",
-    carBrand: "Acura",
-    customPlate: false,
-    image: "images/Hot Wheels/Acura Integra GSR.jpg",
-    measurements: {
-      wheelbase: 40.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.5,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 5.5,
-      rear_wheels_inner_distance: 20.5,
-    }
-  },
-  {
-    id: 17,
-    name: "Audi S4 Quattro",
-    manufacturer: "Hot Wheels",
-    carBrand: "Audi",
-    customPlate: false,
-    image: "images/Hot Wheels/Audi S4 Quattro.jpg",
-    measurements: {
-      wheelbase: 43.0,
-      front_wheel_diameter: 11.2,
-      front_wheel_width: 5.5,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 11.2,
-      rear_wheel_width: 5.5,
-      rear_wheels_inner_distance: 21.0,
-    }
-  },
-  {
-    id: 18,
-    name: "Honda Civic SI",
-    manufacturer: "Hot Wheels",
-    carBrand: "Honda",
-    customPlate: false,
-    image: "images/Hot Wheels/Honda Civic SI.jpg",
-    measurements: {
-      wheelbase: 43.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.5,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 5.5,
-      rear_wheels_inner_distance: 21.0,
-    }
-  },
-  {
-    id: 19,
-    name: "Nissan Skyline HT 2000GT-X",
-    manufacturer: "Hot Wheels",
-    carBrand: "Nissan",
-    customPlate: false,
-    image: "images/Hot Wheels/Nissan Skyline HT 2000GT-X.jpg",
-    measurements: {
-      wheelbase: 44.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.5,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 5.5,
-      rear_wheels_inner_distance: 21.0,
-    }
-  },
-  {
-    id: 20,
-    name: "Porsche 911 Carrera RS 3.8",
-    manufacturer: "Hot Wheels",
-    carBrand: "Porsche",
-    customPlate: false,
-    image: "images/Hot Wheels/Porsche 911 Carrera RS 3.8.jpg",
-    measurements: {
-      wheelbase: 39.0,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 6.0,
-      front_wheels_inner_distance: 20.0,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 6.0,
-      rear_wheels_inner_distance: 20.0,
-    }
-  },
-  {
-    id: 21,
-    name: "'26 Mercedes-AMG F1",
-    manufacturer: "Hot Wheels",
-    carBrand: "Mercedes",
-    customPlate: false,
-    image: "images/Hot Wheels/Mercedes-AMG F1.jpg",
-    measurements: {
-      wheelbase: 56.5,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.4,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 7.2,
-      rear_wheels_inner_distance: 17.5,
-    }
-  },
-  {
-    id: 22,
-    name: "Porsche 911 Carrera RS 2.7",
-    manufacturer: "Majorette",
-    carBrand: "Porsche",
-    customPlate: false,
-    image: "images/Majorette/Porsche 911 Carrera RS 2.7.jpg",
-    measurements: {
-      wheelbase: 40.5,
-      front_wheel_diameter: 12.0,
-      front_wheel_width: 5.2,
-      front_wheels_inner_distance: 18.5,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 5.2,
-      rear_wheels_inner_distance: 18.5,
-    }
-  },
-  {
-    id: 23,
-    name: "'26 McLaren F1",
-    manufacturer: "Hot Wheels",
-    carBrand: "McLaren",
-    customPlate: false,
-    image: "images/Hot Wheels/McLaren F1.jpg",
-    measurements: {
-      wheelbase: 56.5,
-      front_wheel_diameter: 11.0,
-      front_wheel_width: 5.4,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 7.2,
-      rear_wheels_inner_distance: 17.5,
-    }
-  },
-  {
-    id: 24,
-    name: "Porsche 911 GT3 Cup (992)",
-    manufacturer: "Majorette",
-    carBrand: "Porsche",
-    customPlate: true,
-    image: "images/Majorette/Porsche 911 GT3 Cup (992).jpg",
-    measurements: {
-      wheelbase: 40.0,
-      front_wheel_diameter: 12.0,
-      front_wheel_width: 5.2,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 5.2,
-      rear_wheels_inner_distance: 21.0,
-    }
-  },
-  {
-    id: 25,
-    name: "Porsche 911 Carrera S",
-    manufacturer: "Majorette",
-    carBrand: "Porsche",
-    customPlate: false,
-    image: "images/Majorette/Porsche 911 Carrera S.jpg",
-    measurements: {
-      wheelbase: 41.0,
-      front_wheel_diameter: 12.0,
-      front_wheel_width: 5.2,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 5.2,
-      rear_wheels_inner_distance: 21.0,
-    }
-  },
-  {
-    id: 26,
-    name: "McLaren 720S LB-WORKS (828)",
-    manufacturer: "Mini GT",
-    carBrand: "McLaren",
-    customPlate: false,
-    image: "images/MiniGT/McLaren 720S LB★Works.jpg",
-    measurements: {
-      wheelbase: 42.0,
-      front_wheel_diameter: 10.5,
-      front_wheel_width: 4.5,
-      front_wheels_inner_distance: 22.8,
-      rear_wheel_diameter: 11.2,
-      rear_wheel_width: 5.3,
-      rear_wheels_inner_distance: 22.0,
-    }
-  },
-  {
-    id: 27,
-    name: "Porsche 935 K3",
-    manufacturer: "Majorette",
-    carBrand: "Porsche",
-    customPlate: false,
-    image: "images/Majorette/Porsche 935 K3.jpg",
-    measurements: {
-      wheelbase: 37.0,
-      front_wheel_diameter: 12.0,
-      front_wheel_width: 5.2,
-      front_wheels_inner_distance: 19.0,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 5.2,
-      rear_wheels_inner_distance: 22.0,
-    }
-  },
-  {
-    id: 28,
-    name: "Porsche 917 KH",
-    manufacturer: "Majorette",
-    carBrand: "Porsche",
-    customPlate: false,
-    image: "images/Majorette/Porsche 917 KH.jpg",
-    measurements: {
-      wheelbase: 40.0,
-      front_wheel_diameter: 12.0,
-      front_wheel_width: 5.2,
-      front_wheels_inner_distance: 24.0,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 5.2,
-      rear_wheels_inner_distance: 24.0,
-    }
-  },
-  {
-    id: 29,
-    name: "Ferrari 296 GTB Assetto Fiorano",
-    manufacturer: "Maisto",
-    carBrand: "Ferrari",
-    customPlate: false,
-    image: "images/Maisto/Ferrari 296 GTB Assetto Fiorano.jpg",
-    measurements: {
-      wheelbase: 41.0,
-      front_wheel_diameter: 11.5,
-      front_wheel_width: 5.0,
-      front_wheels_inner_distance: 21.0,
-      rear_wheel_diameter: 11.5,
-      rear_wheel_width: 6.0,
-      rear_wheels_inner_distance: 18.3,
-    }
-  },
-  {
-    id: 30,
-    name: "Lamborghini Sian FKP 37",
-    manufacturer: "Maisto",
-    carBrand: "Lamborghini",
-    customPlate: false,
-    image: "images/Maisto/Lamborghini Sian FKP 37.jpg",
-    measurements: {
-      wheelbase: 42.5,
-      front_wheel_diameter: 12.0,
-      front_wheel_width: 5.0,
-      front_wheels_inner_distance: 22.4,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 6.0,
-      rear_wheels_inner_distance: 20.75,
-    }
-  },
-  {
-    id: 31,
-    name: "Porsche 911 GT2 RS",
-    manufacturer: "Maisto",
-    carBrand: "Porsche",
-    customPlate: false,
-    image: "images/Maisto/Porsche 911 GT2 RS.jpg",
-    measurements: {
-      wheelbase: 38.0,
-      front_wheel_diameter: 12.0,
-      front_wheel_width: 5.0,
-      front_wheels_inner_distance: 19.0,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 6.0,
-      rear_wheels_inner_distance: 17.5,
-    }
-  },
-  {
-    id: 32,
-    name: "Porsche Taycan Turbo S",
-    manufacturer: "Maisto",
-    carBrand: "Porsche",
-    customPlate: false,
-    image: "images/Maisto/Porsche Taycan Turbo S.jpg",
-    measurements: {
-      wheelbase: 45.5,
-      front_wheel_diameter: 12.0,
-      front_wheel_width: 5.0,
-      front_wheels_inner_distance: 20.5,
-      rear_wheel_diameter: 12.0,
-      rear_wheel_width: 6.0,
-      rear_wheels_inner_distance: 18.5,
-    }
-  },
-  {
-    id: 33,
-    name: "'90 Volkswagen Golf Country",
-    manufacturer: "Matchbox",
-    carBrand: "Volkswagen",
-    customPlate: false,
-    image: "images/Matchbox/Volkswagen Golf Country.jpg",
-    measurements: {
-      wheelbase: 41.0,
-      front_wheel_diameter: 11.5,
-      front_wheel_width: 5.2,
-      front_wheels_inner_distance: 19.7,
-      rear_wheel_diameter: 11.5,
-      rear_wheel_width: 5.2,
-      rear_wheels_inner_distance: 19.7,
-    }
-  },
-  {
-    id: 34,
-    name: "Pagani Imola (Nero Oro)",
-    manufacturer: "Tarmac",
-    carBrand: "Pagani",
-    customPlate: true,
-    image: "images/Tarmac/Pagani Imola (Nero Oro).jpg",
-    measurements: {
-      wheelbase: 43.0,
-      front_wheel_diameter: 10.5,
-      front_wheel_width: 4.3,
-      front_wheels_inner_distance: 22.0,
-      rear_wheel_diameter: 11.0,
-      rear_wheel_width: 6.5,
-      rear_wheels_inner_distance: 19.5,
-    }
-  },
+  { id:1,  name:"Porsche 911 GT3 R #77 (889)",       manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"889", customPlate:false, image:"images/MiniGT/Porsche 911 GT3 R(992).jpg",              measurements:{wheelbase:39.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.5}},
+  { id:2,  name:"Porsche 911 (992) GT3 RS (681)",     manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"681", customPlate:false, image:"images/MiniGT/Porsche 911 (992) GT3 RS.jpg",            measurements:{wheelbase:38.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.5}},
+  { id:3,  name:"Toyota GR86 LB\u2605Nation (885)",   manufacturer:"Mini GT",   carBrand:"Toyota",      minigtCode:"885", customPlate:false, image:"images/MiniGT/Toyota GR86 LB\u2605Nation.jpg",          measurements:{wheelbase:40.0,front_wheel_diameter:10.0,front_wheel_width:4.5,front_wheels_inner_distance:20.0,rear_wheel_diameter:10.0,rear_wheel_width:4.8,rear_wheels_inner_distance:20.0}},
+  { id:4,  name:"Porsche 911 Dakar (958)",            manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"958", customPlate:false, image:"images/MiniGT/Porsche 911 Dakar.jpg",                   measurements:{wheelbase:39.0,front_wheel_diameter:11.5,front_wheel_width:4.1,front_wheels_inner_distance:20.5,rear_wheel_diameter:12.0,rear_wheel_width:5.1,rear_wheels_inner_distance:19.2}},
+  { id:5,  name:"Nissan GT-R Nismo 2024 NISMO (868)", manufacturer:"Mini GT",   carBrand:"Nissan",      minigtCode:"868", customPlate:false, image:"images/MiniGT/Nissan GT-R Nismo 2024.jpg",              measurements:{wheelbase:43.0,front_wheel_diameter:11.2,front_wheel_width:4.5,front_wheels_inner_distance:20.5,rear_wheel_diameter:11.2,rear_wheel_width:4.5,rear_wheels_inner_distance:21.5}},
+  { id:6,  name:"Honda Civic Type R #2 2023 (721)",   manufacturer:"Mini GT",   carBrand:"Honda",       minigtCode:"721", customPlate:false, image:"images/MiniGT/Honda Civic Type R.jpg",                  measurements:{wheelbase:43.0,front_wheel_diameter:11.0,front_wheel_width:4.5,front_wheels_inner_distance:20.3,rear_wheel_diameter:11.0,rear_wheel_width:4.5,rear_wheels_inner_distance:20.3}},
+  { id:7,  name:"Lamborghini Countach LB-WORKS (966)",manufacturer:"Mini GT",   carBrand:"Lamborghini", minigtCode:"966", customPlate:false, image:"images/MiniGT/Lamborghini Countach LB-WORKS.jpg",       measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:4.0,front_wheels_inner_distance:22.3,rear_wheel_diameter:11.0,rear_wheel_width:5.2,rear_wheels_inner_distance:22.3}},
+  { id:8,  name:"McLaren 720S GT3 Evo (984)",         manufacturer:"Mini GT",   carBrand:"McLaren",     minigtCode:"984", customPlate:false, image:"images/MiniGT/McLaren 720S GT3 Evo.jpg",                measurements:{wheelbase:42.0,front_wheel_diameter:11.0,front_wheel_width:5.0,front_wheels_inner_distance:21.2,rear_wheel_diameter:11.0,rear_wheel_width:6.0,rear_wheels_inner_distance:20.5}},
+  { id:26, name:"McLaren 720S LB-WORKS (828)",        manufacturer:"Mini GT",   carBrand:"McLaren",     minigtCode:"828", customPlate:false, image:"images/MiniGT/McLaren 720S LB\u2605Works.jpg",          measurements:{wheelbase:42.0,front_wheel_diameter:10.5,front_wheel_width:4.5,front_wheels_inner_distance:22.8,rear_wheel_diameter:11.2,rear_wheel_width:5.3,rear_wheels_inner_distance:22.0}},
+  { id:9,  name:"'71 Datsun 510",                     manufacturer:"Hot Wheels",carBrand:"Datsun",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Datsun 510.jpg",                      measurements:{wheelbase:42.5,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
+  { id:10, name:"'91 Mazda MX-5 Miata",               manufacturer:"Hot Wheels",carBrand:"Mazda",       minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Mazda MX-5 Miata.jpg",               measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:20.5,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
+  { id:11, name:"'82 Toyota Supra",                   manufacturer:"Hot Wheels",carBrand:"Toyota",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Toyota Supra.jpg",                    measurements:{wheelbase:42.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
+  { id:12, name:"'67 Shelby GT500",                   manufacturer:"Hot Wheels",carBrand:"Shelby",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Shelby GT500.jpg",                    measurements:{wheelbase:43.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:18.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:18.0}},
+  { id:13, name:"Batmobile '17",                      manufacturer:"Hot Wheels",carBrand:"Batmobile",   minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Batmobile.jpg",                       measurements:{wheelbase:48.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:16.2,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:18.5}},
+  { id:14, name:"'96 Porsche Carrera",                manufacturer:"Hot Wheels",carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Porsche Carrera.jpg",                 measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
+  { id:15, name:"'20 Toyota Tacoma",                  manufacturer:"Hot Wheels",carBrand:"Toyota",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Toyota Tacoma.jpg",                   measurements:{wheelbase:44.5,front_wheel_diameter:15.0,front_wheel_width:5.5,front_wheels_inner_distance:20.5,rear_wheel_diameter:15.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
+  { id:16, name:"'01 Custom Acura Integra GSR",       manufacturer:"Hot Wheels",carBrand:"Acura",       minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Acura Integra GSR.jpg",               measurements:{wheelbase:40.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:20.5}},
+  { id:17, name:"Audi S4 Quattro",                    manufacturer:"Hot Wheels",carBrand:"Audi",        minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Audi S4 Quattro.jpg",                 measurements:{wheelbase:43.0,front_wheel_diameter:11.2,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.2,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
+  { id:18, name:"Honda Civic SI",                     manufacturer:"Hot Wheels",carBrand:"Honda",       minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Honda Civic SI.jpg",                  measurements:{wheelbase:43.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
+  { id:19, name:"Nissan Skyline HT 2000GT-X",         manufacturer:"Hot Wheels",carBrand:"Nissan",      minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Nissan Skyline HT 2000GT-X.jpg",      measurements:{wheelbase:44.0,front_wheel_diameter:11.0,front_wheel_width:5.5,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:5.5,rear_wheels_inner_distance:21.0}},
+  { id:20, name:"Porsche 911 Carrera RS 3.8",         manufacturer:"Hot Wheels",carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Porsche 911 Carrera RS 3.8.jpg",      measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:6.0,front_wheels_inner_distance:20.0,rear_wheel_diameter:11.0,rear_wheel_width:6.0,rear_wheels_inner_distance:20.0}},
+  { id:21, name:"'26 Mercedes-AMG F1",                manufacturer:"Hot Wheels",carBrand:"Mercedes",    minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Mercedes-AMG F1.jpg",                 measurements:{wheelbase:56.5,front_wheel_diameter:11.0,front_wheel_width:5.4,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:7.2,rear_wheels_inner_distance:17.5}},
+  { id:23, name:"'26 McLaren F1",                     manufacturer:"Hot Wheels",carBrand:"McLaren",     minigtCode:null,  customPlate:false, image:"images/Hot Wheels/McLaren F1.jpg",                      measurements:{wheelbase:56.5,front_wheel_diameter:11.0,front_wheel_width:5.4,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:7.2,rear_wheels_inner_distance:17.5}},
+  { id:22, name:"Porsche 911 Carrera RS 2.7",         manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera RS 2.7.jpg",       measurements:{wheelbase:40.5,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:18.5,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:18.5}},
+  { id:24, name:"Porsche 911 GT3 Cup (992)",          manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:true,  image:"images/Majorette/Porsche 911 GT3 Cup (992).jpg",        measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
+  { id:25, name:"Porsche 911 Carrera S",              manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera S.jpg",            measurements:{wheelbase:41.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
+  { id:27, name:"Porsche 935 K3",                     manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 935 K3.jpg",                   measurements:{wheelbase:37.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:19.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:22.0}},
+  { id:28, name:"Porsche 917 KH",                     manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 917 KH.jpg",                   measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:24.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:24.0}},
+  { id:29, name:"Ferrari 296 GTB Assetto Fiorano",    manufacturer:"Maisto",    carBrand:"Ferrari",     minigtCode:null,  customPlate:false, image:"images/Maisto/Ferrari 296 GTB Assetto Fiorano.jpg",     measurements:{wheelbase:41.0,front_wheel_diameter:11.5,front_wheel_width:5.0,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.5,rear_wheel_width:6.0,rear_wheels_inner_distance:18.3}},
+  { id:30, name:"Lamborghini Sian FKP 37",            manufacturer:"Maisto",    carBrand:"Lamborghini", minigtCode:null,  customPlate:false, image:"images/Maisto/Lamborghini Sian FKP 37.jpg",             measurements:{wheelbase:42.5,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:22.4,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:20.75}},
+  { id:31, name:"Porsche 911 GT2 RS",                 manufacturer:"Maisto",    carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Maisto/Porsche 911 GT2 RS.jpg",                  measurements:{wheelbase:38.0,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:19.0,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:17.5}},
+  { id:32, name:"Porsche Taycan Turbo S",             manufacturer:"Maisto",    carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Maisto/Porsche Taycan Turbo S.jpg",              measurements:{wheelbase:45.5,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:20.5,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:18.5}},
+  { id:33, name:"'90 Volkswagen Golf Country",        manufacturer:"Matchbox",  carBrand:"Volkswagen",  minigtCode:null,  customPlate:false, image:"images/Matchbox/'90 Volkswagen Golf Country.jpg",       measurements:{wheelbase:41.0,front_wheel_diameter:11.5,front_wheel_width:5.2,front_wheels_inner_distance:19.7,rear_wheel_diameter:11.5,rear_wheel_width:5.2,rear_wheels_inner_distance:19.7}},
+  { id:34, name:"Pagani Imola (Nero Oro)",            manufacturer:"Tarmac",    carBrand:"Pagani",      minigtCode:null,  customPlate:true,  image:"images/Tarmac/Pagani Imola (Nero Oro).jpg",             measurements:{wheelbase:43.0,front_wheel_diameter:10.5,front_wheel_width:4.3,front_wheels_inner_distance:22.0,rear_wheel_diameter:11.0,rear_wheel_width:6.5,rear_wheels_inner_distance:19.5}},
 ];
 
 // ============================================================
-// SCAD OUTPUT BUILDER
+// HELPERS
 // ============================================================
+function mfrColor(mfr)   { return MFR_COLORS[mfr]   || "#4f8ef7"; }
+function brandColor(b)   { return BRAND_COLORS[b]   || "#8b90a8"; }
+function hex2rgba(hex, a){ const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${a})`; }
+
 function buildScad(car) {
   const m = car.measurements;
   return `custom_text = "${car.name}";
@@ -1008,7 +600,7 @@ rear_wheels_inner_distance = ${m.rear_wheels_inner_distance};`;
 }
 
 // ============================================================
-// COPY + TOAST
+// TOAST
 // ============================================================
 let toastTimer;
 function showToast(msg) {
@@ -1016,91 +608,125 @@ function showToast(msg) {
   document.getElementById("toast-msg").textContent = msg;
   t.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
 }
 
-function copyScad(id) {
+// ============================================================
+// MODAL
+// ============================================================
+let currentModalCar = null;
+
+function openModal(id) {
   const car = CARS.find(c => c.id === id);
   if (!car) return;
-  navigator.clipboard.writeText(buildScad(car));
-  showToast("SCAD parameters copied â€” paste into MakerWorld!");
-  const btn = document.querySelector(`[data-scad="${id}"]`);
-  if (btn) {
-    btn.classList.add("copied");
-    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Copied!`;
-    setTimeout(() => {
-      btn.classList.remove("copied");
-      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy SCAD`;
-    }, 2000);
-  }
+  currentModalCar = car;
+  const mc = mfrColor(car.manufacturer);
+
+  // image
+  const imgEl = document.getElementById("modal-img");
+  imgEl.style.setProperty("--mfr-color", mc);
+  imgEl.innerHTML = `<button class="modal-close" onclick="closeModalDirect()">✕</button>` + (
+    car.image
+      ? `<img src="${car.image}" alt="${car.name}">`
+      : `<div class="placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3m0 0h3l3 3v4h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg><span>No image</span></div>`
+  );
+
+  document.getElementById("modal-title").textContent = car.name;
+
+  // meta
+  const bc = brandColor(car.carBrand);
+  let metaHtml = `<span class="brand-pill" style="color:${bc};border-color:${hex2rgba(bc,0.3)};background:${hex2rgba(bc,0.1)}">${car.carBrand}</span>`;
+  metaHtml += `<span class="brand-pill" style="color:${mc};border-color:${hex2rgba(mc,0.3)};background:${hex2rgba(mc,0.1)}">${car.manufacturer}</span>`;
+  if (car.minigtCode) metaHtml += `<span class="minigt-code">#${car.minigtCode}</span>`;
+  if (car.customPlate) metaHtml += `<span class="custom-plate-badge">Custom Plate</span>`;
+  document.getElementById("modal-meta").innerHTML = metaHtml;
+
+  // measures
+  const m = car.measurements;
+  document.getElementById("modal-measures").innerHTML = `
+    <div class="measure wb">
+      <div class="measure-label">Wheelbase</div>
+      <div class="measure-val">${m.wheelbase}<span class="unit">mm</span></div>
+    </div>
+    <div class="measure front">
+      <div class="measure-label">Front Diameter</div>
+      <div class="measure-val">${m.front_wheel_diameter}<span class="unit">mm</span></div>
+    </div>
+    <div class="measure rear">
+      <div class="measure-label">Rear Diameter</div>
+      <div class="measure-val">${m.rear_wheel_diameter}<span class="unit">mm</span></div>
+    </div>
+    <div class="measure front">
+      <div class="measure-label">Front Width</div>
+      <div class="measure-val">${m.front_wheel_width}<span class="unit">mm</span></div>
+    </div>
+    <div class="measure rear">
+      <div class="measure-label">Rear Width</div>
+      <div class="measure-val">${m.rear_wheel_width}<span class="unit">mm</span></div>
+    </div>
+    <div class="measure front">
+      <div class="measure-label">Front Inner Gap</div>
+      <div class="measure-val">${m.front_wheels_inner_distance}<span class="unit">mm</span></div>
+    </div>
+    <div class="measure rear">
+      <div class="measure-label">Rear Inner Gap</div>
+      <div class="measure-val">${m.rear_wheels_inner_distance}<span class="unit">mm</span></div>
+    </div>`;
+
+  // reset button
+  const btn = document.getElementById("modal-scad-btn");
+  btn.classList.remove("copied");
+  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy SCAD Parameters`;
+
+  document.getElementById("modal-overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById("modal-overlay")) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById("modal-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModalDirect(); });
+
+function copyScadFromModal() {
+  if (!currentModalCar) return;
+  navigator.clipboard.writeText(buildScad(currentModalCar));
+  showToast("SCAD parameters copied — paste into MakerWorld!");
+  const btn = document.getElementById("modal-scad-btn");
+  btn.classList.add("copied");
+  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Copied!`;
+  setTimeout(() => {
+    btn.classList.remove("copied");
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy SCAD Parameters`;
+  }, 2200);
 }
 
 // ============================================================
 // CARD RENDERER
 // ============================================================
 function renderCard(car) {
-  const m = car.measurements;
+  const mc = mfrColor(car.manufacturer);
+  const bc = brandColor(car.carBrand);
 
   const imgHtml = car.image
     ? `<img src="${car.image}" alt="${car.name}" loading="lazy">`
-    : `<div class="placeholder">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-          <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3m0 0h3l3 3v4h-2"/>
-          <circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>
-        </svg>
-        <span>No image</span>
-      </div>`;
+    : `<div class="placeholder"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3m0 0h3l3 3v4h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg><span>No image</span></div>`;
 
-  return `
-  <div class="card">
+  let metaHtml = `<span class="brand-pill" style="color:${bc};border-color:${hex2rgba(bc,0.3)};background:${hex2rgba(bc,0.1)}">${car.carBrand}</span>`;
+  if (car.minigtCode) metaHtml += `<span class="minigt-code">#${car.minigtCode}</span>`;
+  if (car.customPlate) metaHtml += `<span class="custom-plate-badge">Custom Plate</span>`;
+
+  return `<div class="card" style="--mfr-color:${mc}" onclick="openModal(${car.id})">
     <div class="card-img">
       ${imgHtml}
-      <div class="brand-badge">${car.manufacturer}</div>
+      <div class="mfr-badge" style="border-color:${hex2rgba(mc,0.4)}">${car.manufacturer}</div>
     </div>
     <div class="card-body">
       <div class="car-name">${car.name}</div>
-      <div class="car-meta">
-        ${car.carBrand}${car.customPlate ? ' <span class="custom-plate-badge">Custom Plate</span>' : ''}
-      </div>
-
-      <div class="measures-grid">
-        <div class="measure wb">
-          <div class="measure-label">Wheelbase</div>
-          <div class="measure-val">${m.wheelbase}<span class="unit">mm</span></div>
-        </div>
-        <div class="measure front">
-          <div class="measure-label">Front Diameter</div>
-          <div class="measure-val">${m.front_wheel_diameter}<span class="unit">mm</span></div>
-        </div>
-        <div class="measure rear">
-          <div class="measure-label">Rear Diameter</div>
-          <div class="measure-val">${m.rear_wheel_diameter}<span class="unit">mm</span></div>
-        </div>
-        <div class="measure front">
-          <div class="measure-label">Front Width</div>
-          <div class="measure-val">${m.front_wheel_width}<span class="unit">mm</span></div>
-        </div>
-        <div class="measure rear">
-          <div class="measure-label">Rear Width</div>
-          <div class="measure-val">${m.rear_wheel_width}<span class="unit">mm</span></div>
-        </div>
-        <div class="measure front">
-          <div class="measure-label">Front Inner Gap</div>
-          <div class="measure-val">${m.front_wheels_inner_distance}<span class="unit">mm</span></div>
-        </div>
-        <div class="measure rear">
-          <div class="measure-label">Rear Inner Gap</div>
-          <div class="measure-val">${m.rear_wheels_inner_distance}<span class="unit">mm</span></div>
-        </div>
-      </div>
-
-      <button class="btn-scad" data-scad="${car.id}" onclick="copyScad(${car.id})">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="9" y="9" width="13" height="13" rx="2"/>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-        </svg>
-        Copy SCAD
-      </button>
+      <div class="car-meta">${metaHtml}</div>
     </div>
   </div>`;
 }
@@ -1111,60 +737,35 @@ function renderCard(car) {
 function populateFilters() {
   const manufacturers = [...new Set(CARS.map(c => c.manufacturer))].sort();
   const carBrands     = [...new Set(CARS.map(c => c.carBrand))].sort();
-
   const mSel = document.getElementById("filter-manufacturer");
-  manufacturers.forEach(m => {
-    const o = document.createElement("option");
-    o.value = m; o.textContent = m; mSel.appendChild(o);
-  });
-
+  manufacturers.forEach(m => { const o=document.createElement("option"); o.value=m; o.textContent=m; mSel.appendChild(o); });
   const bSel = document.getElementById("filter-brand");
-  carBrands.forEach(b => {
-    const o = document.createElement("option");
-    o.value = b; o.textContent = b; bSel.appendChild(o);
-  });
-
+  carBrands.forEach(b => { const o=document.createElement("option"); o.value=b; o.textContent=b; bSel.appendChild(o); });
   document.getElementById("total-count").textContent = CARS.length;
 }
 
 function renderGrid() {
-  const q    = document.getElementById("search").value.toLowerCase();
-  const mfr  = document.getElementById("filter-manufacturer").value;
+  const q     = document.getElementById("search").value.toLowerCase();
+  const mfr   = document.getElementById("filter-manufacturer").value;
   const brand = document.getElementById("filter-brand").value;
-
   const filtered = CARS.filter(c => {
-    const matchQ = !q || c.name.toLowerCase().includes(q) || c.manufacturer.toLowerCase().includes(q) || c.carBrand.toLowerCase().includes(q) || c.code.toLowerCase().includes(q);
-    const matchM = !mfr   || c.manufacturer === mfr;
-    const matchB = !brand || c.carBrand === brand;
-    return matchQ && matchM && matchB;
+    const matchQ = !q || c.name.toLowerCase().includes(q) || c.manufacturer.toLowerCase().includes(q) || c.carBrand.toLowerCase().includes(q) || (c.minigtCode && c.minigtCode.includes(q));
+    return matchQ && (!mfr || c.manufacturer===mfr) && (!brand || c.carBrand===brand);
   });
-
+  document.getElementById("filter-count").textContent = `${filtered.length} car${filtered.length!==1?'s':''}`;
   const grid = document.getElementById("grid");
-  document.getElementById("filter-count").textContent = `${filtered.length} car${filtered.length !== 1 ? 's' : ''}`;
-
-  if (filtered.length === 0) {
-    grid.innerHTML = `<div class="empty">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
-      <p>No cars found. Try adjusting your filters.</p>
-    </div>`;
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><p>No cars found. Try adjusting your filters.</p></div>`;
     return;
   }
-
   grid.innerHTML = filtered.map(renderCard).join("");
 }
 
-// ============================================================
-// INIT
-// ============================================================
 populateFilters();
 renderGrid();
-
 document.getElementById("search").addEventListener("input", renderGrid);
 document.getElementById("filter-manufacturer").addEventListener("change", renderGrid);
 document.getElementById("filter-brand").addEventListener("change", renderGrid);
 </script>
 </body>
 </html>
-
