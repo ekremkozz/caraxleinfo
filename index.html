@@ -17,8 +17,9 @@
     --text2: #8b90a8;
     --text3: #555a72;
     --green: #3ecf8e;
-    --radius: 10px;
-    --radius-lg: 14px;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --radius-sm: 8px;
 
     /* === MANUFACTURER COLORS (edit freely) === */
     --color-hot-wheels:  #e8392a;
@@ -128,6 +129,66 @@
   }
   .stat-pill span { color: var(--accent); font-weight: 600; }
 
+  /* ── CUSTOM DROPDOWN ── */
+  .custom-select { position: relative; }
+
+  .cs-trigger {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text2);
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color .15s, color .15s;
+    min-width: 160px;
+    justify-content: space-between;
+  }
+  .cs-trigger:hover, .custom-select.open .cs-trigger {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+  .cs-trigger svg { flex-shrink: 0; color: var(--text3); transition: transform .15s; }
+  .custom-select.open .cs-trigger svg { transform: rotate(180deg); }
+
+  .cs-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    z-index: 300;
+    animation: ddIn .12s ease;
+  }
+  .custom-select.open .cs-menu { display: block; }
+
+  @keyframes ddIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .cs-option {
+    display: block; width: 100%;
+    padding: 9px 14px;
+    text-align: left;
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background .1s, color .1s;
+    white-space: nowrap;
+  }
+  .cs-option:hover { background: var(--surface2); color: var(--text); }
+  .cs-option.active { color: var(--accent); font-weight: 600; background: rgba(79,142,247,0.08); }
+
   /* ── FILTER BAR ── */
   .filter-bar {
     background: var(--surface);
@@ -145,7 +206,7 @@
     transform: translateY(-50%); color: var(--text3); pointer-events: none;
   }
 
-  input[type="text"], select {
+  input[type="text"], input[type="number"], input[type="url"], select {
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -156,7 +217,7 @@
     transition: border-color .15s;
   }
   input[type="text"] { padding-left: 34px; width: 100%; }
-  input[type="text"]:focus, select:focus { border-color: var(--accent); }
+  input[type="text"]:focus, input[type="number"]:focus, input[type="url"]:focus, select:focus { border-color: var(--accent); }
   select {
     cursor: pointer; padding-right: 28px; appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b90a8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
@@ -198,11 +259,11 @@
     display: flex; align-items: flex-end; justify-content: center;
     overflow: hidden; position: relative;
   }
-  /* dominant color glow at bottom of image */
+  /* dominant color glow at BOTTOM of image only */
   .card-img::after {
     content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at center bottom, var(--card-glow, transparent) 0%, transparent 65%);
+    position: absolute; left: 0; right: 0; bottom: 0; height: 55%;
+    background: linear-gradient(to top, var(--card-glow, transparent) 0%, transparent 100%);
     pointer-events: none;
     z-index: 1;
   }
@@ -216,9 +277,15 @@
   }
   .card-img .placeholder span { font-size: 11px; }
 
-  .mfr-badge {
+  /* badges overlaid on image bottom-left */
+  .card-img-badges {
     position: absolute;
     bottom: 8px; left: 8px;
+    display: flex; flex-wrap: wrap; gap: 4px;
+    z-index: 3;
+  }
+
+  .mfr-badge {
     padding: 3px 8px;
     border-radius: 999px;
     font-size: 10px; font-weight: 700;
@@ -226,13 +293,12 @@
     background: rgba(0,0,0,0.55);
     color: #fff;
     border: 1px solid rgba(255,255,255,0.15);
-    z-index: 2;
   }
 
-  .card-body { padding: 12px 14px 14px; }
+  .card-body { padding: 10px 14px 13px; }
 
   .car-name {
-    font-size: 13px; font-weight: 600; margin-bottom: 5px;
+    font-size: 13px; font-weight: 600;
     letter-spacing: -0.1px; line-height: 1.3;
   }
 
@@ -284,8 +350,10 @@
     border-radius: 18px;
     width: 100%; max-width: 520px;
     max-height: 90vh;
-    overflow-y: auto;
+    overflow: hidden;
     position: relative;
+    display: flex;
+    flex-direction: column;
     animation: modalIn .2s cubic-bezier(0.34,1.56,0.64,1);
   }
 
@@ -295,59 +363,69 @@
   }
 
   .modal-img {
-    width: 100%; height: 220px;
+    width: 100%; height: 210px;
     background: var(--surface2);
     overflow: hidden; position: relative;
     border-radius: 18px 18px 0 0;
+    flex-shrink: 0;
   }
-  .modal-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+  .modal-img img { width: 100%; height: 100%; object-fit: cover; object-position: center 50%; }
+
+  .modal-body {
+    padding: 16px 18px 20px;
+    overflow-y: auto;
+    flex: 1;
+  }
   .modal-img .placeholder {
     width: 100%; height: 100%;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     gap: 10px; color: var(--text3);
   }
-
-  /* colored top stripe on modal */
-  .modal-img::before {
+  /* glow on modal image too */
+  .modal-img::after {
     content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 4px;
-    background: var(--mfr-color, var(--accent));
+    position: absolute; left: 0; right: 0; bottom: 0; height: 55%;
+    background: linear-gradient(to top, var(--modal-glow, transparent) 0%, transparent 100%);
+    pointer-events: none;
     z-index: 1;
   }
 
+  /* badges overlaid on modal image */
+  .modal-img-badges {
+    position: absolute;
+    bottom: 10px; left: 10px;
+    display: flex; flex-wrap: wrap; gap: 5px;
+    z-index: 3;
+  }
+
   .modal-close {
-    position: absolute; top: 14px; right: 14px;
-    width: 30px; height: 30px;
+    position: absolute; top: 10px; right: 10px;
+    width: 28px; height: 28px;
     background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 50%; color: #fff; font-size: 16px;
+    border-radius: 50%; color: #fff; font-size: 14px;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     z-index: 10; transition: background .15s;
     backdrop-filter: blur(4px);
   }
   .modal-close:hover { background: rgba(255,255,255,0.15); }
 
-  .modal-body { padding: 20px 22px 24px; }
-
   .modal-title {
-    font-size: 19px; font-weight: 700; letter-spacing: -0.4px;
-    margin-bottom: 8px;
+    font-size: 17px; font-weight: 700; letter-spacing: -0.4px;
+    margin-bottom: 14px;
   }
 
-  .modal-meta {
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
+  .modal-meta { display: none; } /* moved to image overlay */
 
   .measures-grid {
     display: grid; grid-template-columns: 1fr 1fr;
-    gap: 7px; margin-bottom: 16px;
+    gap: 6px; margin-bottom: 12px;
   }
 
   .measure {
     background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: 8px; padding: 9px 12px;
+    border-radius: var(--radius-sm); padding: 8px 12px;
     text-align: center;
   }
   .measure.front { border-left: 2px solid var(--accent); }
@@ -355,29 +433,100 @@
   .measure.wb    { grid-column: span 2; border-left: 2px solid var(--green); }
 
   .measure-label {
-    font-size: 9px; color: var(--text3);
+    font-size: 10px; color: var(--text3);
     text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
   }
   .measure-val {
-    font-size: 15px; font-weight: 700;
+    font-size: 18px; font-weight: 700;
     font-variant-numeric: tabular-nums; color: var(--text);
   }
   .measure-val .unit {
-    font-size: 10px; font-weight: 400; color: var(--text3); margin-left: 2px;
+    font-size: 11px; font-weight: 400; color: var(--text3); margin-left: 2px;
+  }
+
+  /* modal action buttons row */
+  .modal-actions {
+    display: flex; gap: 8px;
   }
 
   .btn-scad {
-    width: 100%; display: flex; align-items: center;
+    flex: 1; display: flex; align-items: center;
     justify-content: center; gap: 7px;
-    padding: 11px 14px;
+    padding: 10px 14px;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     border: none; border-radius: var(--radius);
-    color: #fff; font-size: 13px; font-weight: 600;
+    color: #fff; font-size: 12px; font-weight: 600;
     cursor: pointer; transition: opacity .15s, transform .1s;
+    white-space: nowrap;
   }
   .btn-scad:hover { opacity: .9; }
   .btn-scad:active { transform: scale(.97); }
   .btn-scad.copied { background: linear-gradient(135deg, var(--green), #059669); }
+
+  .btn-makerworld-modal {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 13px;
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    border: none; border-radius: var(--radius);
+    color: #fff; font-size: 12px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: opacity .15s;
+    white-space: nowrap;
+  }
+  .btn-makerworld-modal:hover { opacity: .88; }
+
+  .modal-feedback {
+    overflow-y: auto !important;
+    max-height: 90vh;
+    display: block;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE */
+  }
+  .modal-feedback::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+  .fb-field { display:flex; flex-direction:column; gap:5px; }
+  .fb-field input, .fb-field select { width:100%; }
+  .fb-label { font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:0.4px; }
+
+  .fb-measures-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .fb-measures-title {
+    font-size:10px; color:var(--text3);
+    text-transform:uppercase; letter-spacing:0.5px;
+    margin-bottom: 12px;
+  }
+  .fb-measure-item { display:flex; flex-direction:column; gap:4px; margin-bottom:8px; }
+  .fb-mlabel { font-size:11px; color:var(--text3); }
+  .fb-minput { width:100%; font-size:14px; font-weight:600; padding:9px 12px; }
+  .fb-minput-wb  { border-left:2px solid var(--green) !important; }
+  .fb-minput-front { border-left:2px solid var(--accent) !important; }
+  .fb-minput-rear  { border-left:2px solid var(--accent2) !important; }
+  .fb-measure-cols { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .fb-col-header { font-size:11px; font-weight:600; margin-bottom:8px; }
+
+  .fb-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+  .fb-card-wb   { border-left: 2px solid var(--green); }
+  .fb-card-front{ border-left: 2px solid var(--accent); }
+  .fb-card-rear { border-left: 2px solid var(--accent2); }
+
+  .fb-card-header {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+
+  .fb-card-fields {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+  }
 
   /* ── EMPTY ── */
   .empty {
@@ -462,12 +611,23 @@
     </svg>
     <input type="text" id="search" placeholder="Search by name or brand...">
   </div>
-  <select id="filter-manufacturer"><option value="">All manufacturers</option></select>
-  <select id="filter-brand"><option value="">All car brands</option></select>
+  <div class="custom-select" id="dd-mfr">
+    <button class="cs-trigger" onclick="toggleDropdown('dd-mfr')">
+      <span class="cs-label" id="dd-mfr-label">All manufacturers</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div class="cs-menu" id="dd-mfr-menu"></div>
+  </div>
+  <div class="custom-select" id="dd-brand">
+    <button class="cs-trigger" onclick="toggleDropdown('dd-brand')">
+      <span class="cs-label" id="dd-brand-label">All car brands</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div class="cs-menu" id="dd-brand-menu"></div>
+  </div>
   <div class="filter-count" id="filter-count">0 cars</div>
 </div>
 
-<!-- GRID -->
 <div class="grid" id="grid"></div>
 
 <!-- MODAL -->
@@ -475,82 +635,140 @@
   <div class="modal" id="modal">
     <div class="modal-img" id="modal-img">
       <button class="modal-close" onclick="closeModalDirect()">✕</button>
+      <div class="modal-img-badges" id="modal-img-badges"></div>
     </div>
     <div class="modal-body">
       <div class="modal-title" id="modal-title"></div>
       <div class="modal-meta" id="modal-meta"></div>
       <div class="measures-grid" id="modal-measures"></div>
-      <button class="btn-scad" id="modal-scad-btn" onclick="copyScadFromModal()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="9" y="9" width="13" height="13" rx="2"/>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-        </svg>
-        Copy SCAD Parameters
-      </button>
+      <div class="modal-actions">
+        <button class="btn-scad" id="modal-scad-btn" onclick="copyScadFromModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          Copy SCAD
+        </button>
+        <a href="https://makerworld.com/en/models/1895553-ikea-samla-65l-filament-rack-system#profileId-2030875" target="_blank" class="btn-makerworld-modal">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+          </svg>
+          Open in MakerWorld
+        </a>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- FEEDBACK MODAL -->
 <div class="modal-overlay" id="feedback-overlay" onclick="closeFeedback(event)">
-  <div class="modal" style="max-width:440px">
+  <div class="modal modal-feedback" style="max-width:460px">
     <button class="modal-close" style="position:absolute;top:14px;right:14px;z-index:10" onclick="closeFeedbackDirect()">✕</button>
-    <div class="modal-body" style="padding:28px 24px 24px">
-      <div class="modal-title" style="margin-bottom:6px">Submit Measurements</div>
-      <p style="font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.6">Measured a car that's not in the database? Fill in the form below and I'll add it.</p>
-      <form id="feedback-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" style="display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <label style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px">Your name / contact (optional)</label>
-          <input type="text" name="contact" placeholder="e.g. John or john@email.com" style="width:100%">
+    <div class="modal-body" style="padding:26px 22px 22px">
+      <div class="modal-title" style="margin-bottom:4px">Submit Measurements</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.5">Measured a car that's not in the database? Fill in the form and I'll add it.</p>
+      <form id="feedback-form" action="https://api.web3forms.com/submit" method="POST" style="display:flex;flex-direction:column;gap:11px">
+        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY">
+        <input type="hidden" name="subject" value="New Car Measurement Submission">
+        <input type="checkbox" name="botcheck" style="display:none">
+
+        <!-- Contact -->
+        <div class="fb-field">
+          <label class="fb-label">Your name / contact (optional)</label>
+          <input type="text" name="contact" placeholder="e.g. John or john@email.com">
         </div>
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <label style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px">Car name *</label>
-          <input type="text" name="car_name" placeholder="e.g. Ferrari F40" required style="width:100%">
+
+        <!-- Car name -->
+        <div class="fb-field">
+          <label class="fb-label">Car name *</label>
+          <input type="text" name="car_name" placeholder="e.g. Ferrari F40" required>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div style="display:flex;flex-direction:column;gap:4px">
-            <label style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px">Manufacturer *</label>
-            <input type="text" name="manufacturer" placeholder="e.g. Hot Wheels" required style="width:100%">
-          </div>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            <label style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px">Car brand *</label>
-            <input type="text" name="car_brand" placeholder="e.g. Ferrari" required style="width:100%">
-          </div>
-        </div>
-        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px">
-          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">Measurements (mm) *</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div style="display:flex;flex-direction:column;gap:3px">
-              <label style="font-size:10px;color:var(--text3)">Wheelbase</label>
-              <input type="number" name="wheelbase" placeholder="42.0" step="0.1" style="width:100%">
-            </div>
-            <div></div>
-            <div style="display:flex;flex-direction:column;gap:3px">
-              <label style="font-size:10px;color:var(--accent)">Front Diameter</label>
-              <input type="number" name="front_diameter" placeholder="11.0" step="0.1" style="width:100%;border-left:2px solid var(--accent)">
-            </div>
-            <div style="display:flex;flex-direction:column;gap:3px">
-              <label style="font-size:10px;color:var(--accent2)">Rear Diameter</label>
-              <input type="number" name="rear_diameter" placeholder="11.0" step="0.1" style="width:100%;border-left:2px solid var(--accent2)">
-            </div>
-            <div style="display:flex;flex-direction:column;gap:3px">
-              <label style="font-size:10px;color:var(--accent)">Front Width</label>
-              <input type="number" name="front_width" placeholder="5.5" step="0.1" style="width:100%;border-left:2px solid var(--accent)">
-            </div>
-            <div style="display:flex;flex-direction:column;gap:3px">
-              <label style="font-size:10px;color:var(--accent2)">Rear Width</label>
-              <input type="number" name="rear_width" placeholder="5.5" step="0.1" style="width:100%;border-left:2px solid var(--accent2)">
-            </div>
-            <div style="display:flex;flex-direction:column;gap:3px">
-              <label style="font-size:10px;color:var(--accent)">Front Inner Gap</label>
-              <input type="number" name="front_inner" placeholder="21.0" step="0.1" style="width:100%;border-left:2px solid var(--accent)">
-            </div>
-            <div style="display:flex;flex-direction:column;gap:3px">
-              <label style="font-size:10px;color:var(--accent2)">Rear Inner Gap</label>
-              <input type="number" name="rear_inner" placeholder="21.0" step="0.1" style="width:100%;border-left:2px solid var(--accent2)">
-            </div>
+
+        <!-- Manufacturer -->
+        <div class="fb-field">
+          <label class="fb-label">Manufacturer *</label>
+          <select id="fb-mfr-select" name="manufacturer" required onchange="fbToggleOther('mfr')">
+            <option value="">Select manufacturer...</option>
+          </select>
+          <div id="fb-mfr-other" style="display:none;margin-top:6px">
+            <input type="text" id="fb-mfr-other-input" placeholder="Enter manufacturer name" style="width:100%">
           </div>
         </div>
+
+        <!-- Car brand -->
+        <div class="fb-field">
+          <label class="fb-label">Car brand *</label>
+          <select id="fb-brand-select" name="car_brand" required onchange="fbToggleOther('brand')">
+            <option value="">Select car brand...</option>
+          </select>
+          <div id="fb-brand-other" style="display:none;margin-top:6px">
+            <input type="text" id="fb-brand-other-input" placeholder="Enter car brand name" style="width:100%">
+          </div>
+        </div>
+
+        <!-- Measurements -->
+        <div class="fb-measures-title" style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px">Measurements (mm) *</div>
+
+        <!-- Wheelbase card -->
+        <div class="fb-card fb-card-wb">
+          <div class="fb-card-header" style="color:var(--green)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+            Wheelbase
+          </div>
+          <input type="number" name="wheelbase" placeholder="42.0" step="0.1" class="fb-minput fb-minput-wb">
+        </div>
+
+        <!-- Front card -->
+        <div class="fb-card fb-card-front">
+          <div class="fb-card-header" style="color:var(--accent)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+            Front Wheels
+          </div>
+          <div class="fb-card-fields">
+            <div class="fb-measure-item">
+              <label class="fb-mlabel">Diameter</label>
+              <input type="number" name="front_diameter" placeholder="11.0" step="0.1" class="fb-minput fb-minput-front">
+            </div>
+            <div class="fb-measure-item">
+              <label class="fb-mlabel">Width</label>
+              <input type="number" name="front_width" placeholder="5.5" step="0.1" class="fb-minput fb-minput-front">
+            </div>
+            <div class="fb-measure-item">
+              <label class="fb-mlabel">Inner Gap</label>
+              <input type="number" name="front_inner" placeholder="21.0" step="0.1" class="fb-minput fb-minput-front">
+            </div>
+          </div>
+        </div>
+
+        <!-- Rear card -->
+        <div class="fb-card fb-card-rear">
+          <div class="fb-card-header" style="color:var(--accent2)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+            Rear Wheels
+          </div>
+          <div class="fb-card-fields">
+            <div class="fb-measure-item">
+              <label class="fb-mlabel">Diameter</label>
+              <input type="number" name="rear_diameter" placeholder="11.0" step="0.1" class="fb-minput fb-minput-rear">
+            </div>
+            <div class="fb-measure-item">
+              <label class="fb-mlabel">Width</label>
+              <input type="number" name="rear_width" placeholder="5.5" step="0.1" class="fb-minput fb-minput-rear">
+            </div>
+            <div class="fb-measure-item">
+              <label class="fb-mlabel">Inner Gap</label>
+              <input type="number" name="rear_inner" placeholder="21.0" step="0.1" class="fb-minput fb-minput-rear">
+            </div>
+          </div>
+        </div>
+
+        <!-- Image URL -->
+        <div class="fb-field">
+          <label class="fb-label">Image URL (optional)</label>
+          <input type="url" name="image_url" placeholder="https://imgur.com/... or Google Drive link">
+          <span style="font-size:10px;color:var(--text3);margin-top:3px">Upload your photo to Imgur or Google Drive and paste the link here.</span>
+        </div>
+
         <button type="submit" class="btn-scad" style="margin-top:4px">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
           Send Measurements
@@ -618,7 +836,7 @@ const CARS = [
   { id:1,  name:"Porsche 911 GT3 R #77",       color:"#2a7a2a", manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"889", customPlate:false, image:"images/MiniGT/Porsche 911 GT3 R(992).jpg",              measurements:{wheelbase:39.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.5}},
   { id:2,  name:"Porsche 911 (992) GT3 RS",     color:"#111111", manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"681", customPlate:false, image:"images/MiniGT/Porsche 911 (992) GT3 RS.jpg",            measurements:{wheelbase:38.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.5}},
   { id:3,  name:"Toyota GR86 LB\u2605Nation",   color:"#cc2200", manufacturer:"Mini GT",   carBrand:"Toyota",      minigtCode:"885", customPlate:false, image:"images/MiniGT/Toyota GR86 LB\u2605Nation.jpg",          measurements:{wheelbase:40.0,front_wheel_diameter:10.0,front_wheel_width:4.5,front_wheels_inner_distance:20.0,rear_wheel_diameter:10.0,rear_wheel_width:4.8,rear_wheels_inner_distance:20.0}},
-  { id:4,  name:"Porsche 911 Dakar",            color:"#111111", manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"958", customPlate:false, image:"images/MiniGT/Porsche 911 Dakar.jpg",                   measurements:{wheelbase:39.0,front_wheel_diameter:11.5,front_wheel_width:4.1,front_wheels_inner_distance:20.5,rear_wheel_diameter:12.0,rear_wheel_width:5.1,rear_wheels_inner_distance:19.2}},
+  { id:4,  name:"Porsche 911 Dakar",            color:"#080808", manufacturer:"Mini GT",   carBrand:"Porsche",     minigtCode:"958", customPlate:false, image:"images/MiniGT/Porsche 911 Dakar.jpg",                   measurements:{wheelbase:39.0,front_wheel_diameter:11.5,front_wheel_width:4.1,front_wheels_inner_distance:20.5,rear_wheel_diameter:12.0,rear_wheel_width:5.1,rear_wheels_inner_distance:19.2}},
   { id:5,  name:"Nissan GT-R Nismo 2024 NISMO", color:"#4a5568", manufacturer:"Mini GT",   carBrand:"Nissan",      minigtCode:"868", customPlate:false, image:"images/MiniGT/Nissan GT-R Nismo 2024.jpg",              measurements:{wheelbase:43.0,front_wheel_diameter:11.2,front_wheel_width:4.5,front_wheels_inner_distance:20.5,rear_wheel_diameter:11.2,rear_wheel_width:4.5,rear_wheels_inner_distance:21.5}},
   { id:6,  name:"Honda Civic Type R",   color:"#eeeeee", manufacturer:"Mini GT",   carBrand:"Honda",       minigtCode:"721", customPlate:false, image:"images/MiniGT/Honda Civic Type R.jpg",                  measurements:{wheelbase:43.0,front_wheel_diameter:11.0,front_wheel_width:4.5,front_wheels_inner_distance:20.3,rear_wheel_diameter:11.0,rear_wheel_width:4.5,rear_wheels_inner_distance:20.3}},
   { id:7,  name:"Lamborghini Countach LB-WORKS",color:"#eeeeee", manufacturer:"Mini GT",   carBrand:"Lamborghini", minigtCode:"966", customPlate:false, image:"images/MiniGT/Lamborghini Countach LB-WORKS.jpg",       measurements:{wheelbase:39.0,front_wheel_diameter:11.0,front_wheel_width:4.0,front_wheels_inner_distance:22.3,rear_wheel_diameter:11.0,rear_wheel_width:5.2,rear_wheels_inner_distance:22.3}},
@@ -639,10 +857,10 @@ const CARS = [
   { id:21, name:"'26 Mercedes-AMG F1",                color:"#00aa55", manufacturer:"Hot Wheels",carBrand:"Mercedes",    minigtCode:null,  customPlate:false, image:"images/Hot Wheels/Mercedes-AMG F1.jpg",                 measurements:{wheelbase:56.5,front_wheel_diameter:11.0,front_wheel_width:5.4,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:7.2,rear_wheels_inner_distance:17.5}},
   { id:23, name:"'26 McLaren F1",                     color:"#e87020", manufacturer:"Hot Wheels",carBrand:"McLaren",     minigtCode:null,  customPlate:false, image:"images/Hot Wheels/McLaren F1.jpg",                      measurements:{wheelbase:56.5,front_wheel_diameter:11.0,front_wheel_width:5.4,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.0,rear_wheel_width:7.2,rear_wheels_inner_distance:17.5}},
   { id:22, name:"Porsche 911 Carrera RS 2.7",         color:"#eeeeee", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera RS 2.7.jpg",       measurements:{wheelbase:40.5,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:18.5,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:18.5}},
-  { id:24, name:"Porsche 911 GT3 Cup (992)",          color:"#eeeeee", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:true,  image:"images/Majorette/Porsche 911 GT3 Cup (992).jpg",        measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
-  { id:25, name:"Porsche 911 Carrera S",              color:"#1a3a6a", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera S.jpg",            measurements:{wheelbase:41.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
+  { id:24, name:"Porsche 911 GT3 Cup (992)",          color:"#4499b0", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:true,  image:"images/Majorette/Porsche 911 GT3 Cup (992).jpg",        measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
+  { id:25, name:"Porsche 911 Carrera S",              color:"#3a9155", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 911 Carrera S.jpg",            measurements:{wheelbase:41.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:21.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:21.0}},
   { id:27, name:"Porsche 935 K3",                     color:"#eeeeee", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 935 K3.jpg",                   measurements:{wheelbase:37.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:19.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:22.0}},
-  { id:28, name:"Porsche 917 KH",                     color:"#e8d020", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 917 KH.jpg",                   measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:24.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:24.0}},
+  { id:28, name:"Porsche 917 KH",                     color:"#3e5cc5", manufacturer:"Majorette", carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Majorette/Porsche 917 KH.jpg",                   measurements:{wheelbase:40.0,front_wheel_diameter:12.0,front_wheel_width:5.2,front_wheels_inner_distance:24.0,rear_wheel_diameter:12.0,rear_wheel_width:5.2,rear_wheels_inner_distance:24.0}},
   { id:29, name:"Ferrari 296 GTB Assetto Fiorano",    color:"#cc2200", manufacturer:"Maisto",    carBrand:"Ferrari",     minigtCode:null,  customPlate:false, image:"images/Maisto/Ferrari 296 GTB Assetto Fiorano.jpg",     measurements:{wheelbase:41.0,front_wheel_diameter:11.5,front_wheel_width:5.0,front_wheels_inner_distance:21.0,rear_wheel_diameter:11.5,rear_wheel_width:6.0,rear_wheels_inner_distance:18.3}},
   { id:30, name:"Lamborghini Sian FKP 37",            color:"#c8972a", manufacturer:"Maisto",    carBrand:"Lamborghini", minigtCode:null,  customPlate:false, image:"images/Maisto/Lamborghini Sian FKP 37.jpg",             measurements:{wheelbase:42.5,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:22.4,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:20.75}},
   { id:31, name:"Porsche 911 GT2 RS",                 color:"#eeeeee", manufacturer:"Maisto",    carBrand:"Porsche",     minigtCode:null,  customPlate:false, image:"images/Maisto/Porsche 911 GT2 RS.jpg",                  measurements:{wheelbase:38.0,front_wheel_diameter:12.0,front_wheel_width:5.0,front_wheels_inner_distance:19.0,rear_wheel_diameter:12.0,rear_wheel_width:6.0,rear_wheels_inner_distance:17.5}},
@@ -693,25 +911,39 @@ function openModal(id) {
   if (!car) return;
   currentModalCar = car;
   const mc = mfrColor(car.manufacturer);
+  const bc = brandColor(car.carBrand);
 
-  // image
+  // image + glow
   const imgEl = document.getElementById("modal-img");
-  imgEl.style.setProperty("--mfr-color", mc);
-  imgEl.innerHTML = `<button class="modal-close" onclick="closeModalDirect()">✕</button>` + (
-    car.image
-      ? `<img src="${car.image}" alt="${car.name}">`
-      : `<div class="placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3m0 0h3l3 3v4h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg><span>No image</span></div>`
-  );
+  const glowColor = car.color ? hexToGlow(car.color) : 'transparent';
+  imgEl.style.setProperty("--modal-glow", glowColor);
+  imgEl.querySelector('.modal-close').outerHTML; // keep close btn intact
+  // rebuild image content (keep close btn and badges div)
+  const closeBtn = imgEl.querySelector('.modal-close');
+  const badgesEl = imgEl.querySelector('.modal-img-badges');
+  // clear old image
+  Array.from(imgEl.childNodes).forEach(n => {
+    if (n !== closeBtn && n !== badgesEl) n.remove();
+  });
+  if (car.image) {
+    const img = document.createElement('img');
+    img.src = car.image; img.alt = car.name;
+    imgEl.insertBefore(img, closeBtn);
+  } else {
+    const ph = document.createElement('div');
+    ph.className = 'placeholder';
+    ph.innerHTML = `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3m0 0h3l3 3v4h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg><span>No image</span>`;
+    imgEl.insertBefore(ph, closeBtn);
+  }
+
+  // badges on image
+  let badgesHtml = `<span class="mfr-badge" style="border-color:${hex2rgba(mc,0.4)}">${car.manufacturer}</span>`;
+  badgesHtml += `<span class="brand-pill" style="color:${bc};border-color:${hex2rgba(bc,0.3)};background:rgba(0,0,0,0.5)">${car.carBrand}</span>`;
+  if (car.minigtCode) badgesHtml += `<span class="minigt-code">${car.minigtCode}</span>`;
+  if (car.customPlate) badgesHtml += `<span class="custom-plate-badge">Custom Plate</span>`;
+  badgesEl.innerHTML = badgesHtml;
 
   document.getElementById("modal-title").textContent = car.name;
-
-  // meta
-  const bc = brandColor(car.carBrand);
-  let metaHtml = `<span class="brand-pill" style="color:${bc};border-color:${hex2rgba(bc,0.3)};background:${hex2rgba(bc,0.1)}">${car.carBrand}</span>`;
-  metaHtml += `<span class="brand-pill" style="color:${mc};border-color:${hex2rgba(mc,0.3)};background:${hex2rgba(mc,0.1)}">${car.manufacturer}</span>`;
-  if (car.minigtCode) metaHtml += `<span class="minigt-code">#${car.minigtCode}</span>`;
-  if (car.customPlate) metaHtml += `<span class="custom-plate-badge">Custom Plate</span>`;
-  document.getElementById("modal-meta").innerHTML = metaHtml;
 
   // measures
   const m = car.measurements;
@@ -748,7 +980,7 @@ function openModal(id) {
   // reset button
   const btn = document.getElementById("modal-scad-btn");
   btn.classList.remove("copied");
-  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy SCAD Parameters`;
+  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy SCAD`;
 
   document.getElementById("modal-overlay").classList.add("open");
   document.body.style.overflow = "hidden";
@@ -769,10 +1001,10 @@ function copyScadFromModal() {
   showToast("SCAD parameters copied — paste into MakerWorld!");
   const btn = document.getElementById("modal-scad-btn");
   btn.classList.add("copied");
-  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Copied!`;
+  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Copied!`;
   setTimeout(() => {
     btn.classList.remove("copied");
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy SCAD Parameters`;
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy SCAD`;
   }, 2200);
 }
 
@@ -784,9 +1016,44 @@ function copyScadFromModal() {
 // FEEDBACK MODAL
 // ============================================================
 function openFeedback() {
+  // Populate manufacturer dropdown from CARS data
+  const mfrs = [...new Set(CARS.map(c => c.manufacturer))].sort();
+  const brands = [...new Set(CARS.map(c => c.carBrand))].sort();
+
+  const mfrSel = document.getElementById('fb-mfr-select');
+  const brandSel = document.getElementById('fb-brand-select');
+
+  mfrSel.innerHTML = '<option value="">Select manufacturer...</option>';
+  mfrs.forEach(m => {
+    const o = document.createElement('option'); o.value = m; o.textContent = m; mfrSel.appendChild(o);
+  });
+  const oMfr = document.createElement('option'); oMfr.value = '__other__'; oMfr.textContent = '+ Other (not listed)'; mfrSel.appendChild(oMfr);
+
+  brandSel.innerHTML = '<option value="">Select car brand...</option>';
+  brands.forEach(b => {
+    const o = document.createElement('option'); o.value = b; o.textContent = b; brandSel.appendChild(o);
+  });
+  const oBrand = document.createElement('option'); oBrand.value = '__other__'; oBrand.textContent = '+ Other (not listed)'; brandSel.appendChild(oBrand);
+
   document.getElementById("feedback-overlay").classList.add("open");
   document.body.style.overflow = "hidden";
 }
+
+function fbToggleOther(type) {
+  const sel = document.getElementById(`fb-${type}-select`);
+  const otherDiv = document.getElementById(`fb-${type}-other`);
+  const otherInput = document.getElementById(`fb-${type}-other-input`);
+  if (sel.value === '__other__') {
+    otherDiv.style.display = 'block';
+    otherInput.required = true;
+    sel.required = false;
+  } else {
+    otherDiv.style.display = 'none';
+    otherInput.required = false;
+    sel.required = true;
+  }
+}
+
 function closeFeedback(e) {
   if (e.target === document.getElementById("feedback-overlay")) closeFeedbackDirect();
 }
@@ -799,6 +1066,17 @@ function closeFeedbackDirect() {
 document.getElementById("feedback-form").addEventListener("submit", async function(e) {
   e.preventDefault();
   const form = e.target;
+
+  // Resolve "other" selections
+  const mfrSel = document.getElementById('fb-mfr-select');
+  const brandSel = document.getElementById('fb-brand-select');
+  if (mfrSel.value === '__other__') {
+    mfrSel.value = document.getElementById('fb-mfr-other-input').value;
+  }
+  if (brandSel.value === '__other__') {
+    brandSel.value = document.getElementById('fb-brand-other-input').value;
+  }
+
   const btn = form.querySelector('button[type="submit"]');
   btn.textContent = "Sending...";
   btn.disabled = true;
@@ -808,16 +1086,17 @@ document.getElementById("feedback-form").addEventListener("submit", async functi
       body: new FormData(form),
       headers: { Accept: "application/json" }
     });
-    if (res.ok) {
+    const data = await res.json();
+    if (res.ok && data.success) {
       form.style.display = "none";
       document.getElementById("feedback-thanks").style.display = "block";
       setTimeout(closeFeedbackDirect, 2500);
     } else {
-      btn.textContent = "Error — try again";
+      btn.textContent = `Error: ${data.message || res.status}`;
       btn.disabled = false;
     }
-  } catch {
-    btn.textContent = "Error — try again";
+  } catch(err) {
+    btn.textContent = `Error: ${err.message}`;
     btn.disabled = false;
   }
 });
@@ -829,30 +1108,84 @@ function renderCard(car) {
   const mc = mfrColor(car.manufacturer);
   const bc = brandColor(car.carBrand);
 
-  // Use manual color field for glow; fallback to no glow
-  const glowColor = car.color
-    ? hexToGlow(car.color)
-    : null;
+  const glowColor = car.color ? hexToGlow(car.color) : null;
   const glowStyle = glowColor ? `--card-glow:${glowColor}` : '';
 
   const imgHtml = car.image
     ? `<img src="${car.image}" alt="${car.name}" loading="lazy">`
     : `<div class="placeholder"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3m0 0h3l3 3v4h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg><span>No image</span></div>`;
 
-  let metaHtml = `<span class="brand-pill" style="color:${bc};border-color:${hex2rgba(bc,0.3)};background:${hex2rgba(bc,0.1)}">${car.carBrand}</span>`;
-  if (car.minigtCode) metaHtml += `<span class="minigt-code">#${car.minigtCode}</span>`;
-  if (car.customPlate) metaHtml += `<span class="custom-plate-badge">Custom Plate</span>`;
+  let badgesHtml = `<span class="mfr-badge" style="border-color:${hex2rgba(mc,0.4)}">${car.manufacturer}</span>`;
+  badgesHtml += `<span class="brand-pill" style="color:${bc};border-color:${hex2rgba(bc,0.3)};background:rgba(0,0,0,0.5)">${car.carBrand}</span>`;
+  if (car.minigtCode) badgesHtml += `<span class="minigt-code">${car.minigtCode}</span>`;
+  if (car.customPlate) badgesHtml += `<span class="custom-plate-badge">Custom Plate</span>`;
 
   return `<div class="card" data-id="${car.id}" style="--mfr-color:${mc}" onclick="openModal(${car.id})">
     <div class="card-img" ${glowStyle ? `style="${glowStyle}"` : ''}>
       ${imgHtml}
-      <div class="mfr-badge" style="border-color:${hex2rgba(mc,0.4)}">${car.manufacturer}</div>
+      <div class="card-img-badges">${badgesHtml}</div>
     </div>
     <div class="card-body">
       <div class="car-name">${car.name}</div>
-      <div class="car-meta">${metaHtml}</div>
     </div>
   </div>`;
+}
+
+// ============================================================
+// CUSTOM DROPDOWNS
+// ============================================================
+let filterMfr = '';
+let filterBrand = '';
+
+function buildDropdown(ddId, menuId, labelId, items, allLabel, onSelect) {
+  const menu = document.getElementById(menuId);
+  menu.innerHTML = '';
+
+  // "All" option
+  const allBtn = document.createElement('button');
+  allBtn.className = 'cs-option active';
+  allBtn.textContent = allLabel;
+  allBtn.onclick = () => { onSelect('', allLabel, menuId, labelId, ddId); };
+  menu.appendChild(allBtn);
+
+  items.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'cs-option';
+    btn.textContent = item;
+    btn.onclick = () => { onSelect(item, item, menuId, labelId, ddId); };
+    menu.appendChild(btn);
+  });
+}
+
+function toggleDropdown(ddId) {
+  const dd = document.getElementById(ddId);
+  const isOpen = dd.classList.contains('open');
+  // close all
+  document.querySelectorAll('.custom-select.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) dd.classList.add('open');
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.custom-select')) {
+    document.querySelectorAll('.custom-select.open').forEach(el => el.classList.remove('open'));
+  }
+});
+
+function selectMfr(val, label, menuId, labelId, ddId) {
+  filterMfr = val;
+  document.getElementById(labelId).textContent = label;
+  document.getElementById(ddId).classList.remove('open');
+  document.querySelectorAll(`#${menuId} .cs-option`).forEach(b => b.classList.toggle('active', b.textContent === label));
+  renderGrid();
+}
+
+function selectBrand(val, label, menuId, labelId, ddId) {
+  filterBrand = val;
+  document.getElementById(labelId).textContent = label;
+  document.getElementById(ddId).classList.remove('open');
+  document.querySelectorAll(`#${menuId} .cs-option`).forEach(b => b.classList.toggle('active', b.textContent === label));
+  renderGrid();
 }
 
 // ============================================================
@@ -861,34 +1194,35 @@ function renderCard(car) {
 function populateFilters() {
   const manufacturers = [...new Set(CARS.map(c => c.manufacturer))].sort();
   const carBrands     = [...new Set(CARS.map(c => c.carBrand))].sort();
-  const mSel = document.getElementById("filter-manufacturer");
-  manufacturers.forEach(m => { const o=document.createElement("option"); o.value=m; o.textContent=m; mSel.appendChild(o); });
-  const bSel = document.getElementById("filter-brand");
-  carBrands.forEach(b => { const o=document.createElement("option"); o.value=b; o.textContent=b; bSel.appendChild(o); });
+
+  buildDropdown('dd-mfr', 'dd-mfr-menu', 'dd-mfr-label', manufacturers, 'All manufacturers',
+    (val, label) => { filterMfr = val; document.getElementById('dd-mfr-label').textContent = label; document.getElementById('dd-mfr').classList.remove('open'); document.querySelectorAll('#dd-mfr-menu .cs-option').forEach(b => b.classList.toggle('active', b.textContent === label)); renderGrid(); });
+
+  buildDropdown('dd-brand', 'dd-brand-menu', 'dd-brand-label', carBrands, 'All car brands',
+    (val, label) => { filterBrand = val; document.getElementById('dd-brand-label').textContent = label; document.getElementById('dd-brand').classList.remove('open'); document.querySelectorAll('#dd-brand-menu .cs-option').forEach(b => b.classList.toggle('active', b.textContent === label)); renderGrid(); });
+
   document.getElementById("total-count").textContent = CARS.length;
 }
 
 populateFilters();
 renderGrid();
 document.getElementById("search").addEventListener("input", renderGrid);
-document.getElementById("filter-manufacturer").addEventListener("change", renderGrid);
-document.getElementById("filter-brand").addEventListener("change", renderGrid);
 
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     closeModalDirect();
     closeFeedbackDirect();
+    document.querySelectorAll('.custom-select.open').forEach(el => el.classList.remove('open'));
   }
 });
 
 function renderGrid() {
-  const q     = document.getElementById("search").value.toLowerCase();
-  const mfr   = document.getElementById("filter-manufacturer").value;
-  const brand = document.getElementById("filter-brand").value;
+  const q = document.getElementById("search").value.toLowerCase();
   const filtered = CARS.filter(c => {
     const matchQ = !q || c.name.toLowerCase().includes(q) || c.manufacturer.toLowerCase().includes(q) || c.carBrand.toLowerCase().includes(q) || (c.minigtCode && c.minigtCode.includes(q));
-    return matchQ && (!mfr || c.manufacturer===mfr) && (!brand || c.carBrand===brand);
-  });
+    return matchQ && (!filterMfr || c.manufacturer===filterMfr) && (!filterBrand || c.carBrand===filterBrand);
+  }).sort((a, b) => a.name.localeCompare(b.name));
+
   document.getElementById("filter-count").textContent = `${filtered.length} car${filtered.length!==1?'s':''}`;
   const grid = document.getElementById("grid");
   if (!filtered.length) {
