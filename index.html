@@ -720,31 +720,39 @@
           <input type="text" name="contact" placeholder="e.g. John or john@email.com">
         </div>
 
-        <!-- Car name -->
-        <div class="fb-field">
-          <label class="fb-label">Car name *</label>
-          <input type="text" name="car_name" placeholder="e.g. Ferrari F40" required>
-        </div>
-
-        <!-- Manufacturer -->
-        <div class="fb-field">
-          <label class="fb-label">Manufacturer *</label>
-          <select id="fb-mfr-select" name="manufacturer" required onchange="fbToggleOther('mfr')">
-            <option value="">Select manufacturer...</option>
-          </select>
-          <div id="fb-mfr-other" style="display:none;margin-top:6px">
-            <input type="text" id="fb-mfr-other-input" placeholder="Enter manufacturer name" style="width:100%">
+        <!-- Car name + Code side by side -->
+        <div style="display:grid;grid-template-columns:1fr 140px;gap:8px;align-items:end">
+          <div class="fb-field">
+            <label class="fb-label">Car name *</label>
+            <input type="text" name="car_name" placeholder="e.g. Ferrari F40" required>
+          </div>
+          <div class="fb-field">
+            <label class="fb-label">Code
+              <span style="font-size:9px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px">e.g. #435, Premium, Mainline</span>
+            </label>
+            <input type="text" name="code" placeholder="e.g. #435" style="width:100%">
           </div>
         </div>
 
-        <!-- Car brand -->
-        <div class="fb-field">
-          <label class="fb-label">Car brand *</label>
-          <select id="fb-brand-select" name="car_brand" required onchange="fbToggleOther('brand')">
-            <option value="">Select car brand...</option>
-          </select>
-          <div id="fb-brand-other" style="display:none;margin-top:6px">
-            <input type="text" id="fb-brand-other-input" placeholder="Enter car brand name" style="width:100%">
+        <!-- Manufacturer + Car brand side by side -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="fb-field">
+            <label class="fb-label">Manufacturer *</label>
+            <select id="fb-mfr-select" name="manufacturer" required onchange="fbToggleOther('mfr')" style="width:100%">
+              <option value="">Select...</option>
+            </select>
+            <div id="fb-mfr-other" style="display:none;margin-top:6px">
+              <input type="text" id="fb-mfr-other-input" placeholder="Enter manufacturer" style="width:100%">
+            </div>
+          </div>
+          <div class="fb-field">
+            <label class="fb-label">Car brand *</label>
+            <select id="fb-brand-select" name="car_brand" required onchange="fbToggleOther('brand')" style="width:100%">
+              <option value="">Select...</option>
+            </select>
+            <div id="fb-brand-other" style="display:none;margin-top:6px">
+              <input type="text" id="fb-brand-other-input" placeholder="Enter car brand" style="width:100%">
+            </div>
           </div>
         </div>
 
@@ -811,7 +819,7 @@
           <span style="font-size:10px;color:var(--text3);margin-top:3px">Upload your photo to Imgur or Google Drive and paste the link here.</span>
         </div>
 
-        <button type="submit" class="btn-scad" style="margin-top:4px">
+        <button type="submit" style="margin-top:4px;width:100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 14px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:var(--radius);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
           Send Measurements
         </button>
