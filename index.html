@@ -17,6 +17,7 @@
     --text2: #8b90a8;
     --text3: #555a72;
     --green: #3ecf8e;
+    --red: #f43f5e;
     --radius: 12px;
     --radius-lg: 16px;
     --radius-sm: 8px;
@@ -194,7 +195,19 @@
   input[type="text"] { padding-left: 34px; width: 100%; }
   input[type="text"]:focus, input[type="number"]:focus, input[type="url"]:focus, select:focus { border-color: var(--accent); }
 
-  .filter-count { font-size: 12px; color: var(--text3); white-space: nowrap; }
+  .btn-reset-filters {
+    display: flex; align-items: center; gap: 5px;
+    padding: 7px 12px;
+    background: rgba(244,63,94,0.1);
+    border: 1px solid rgba(244,63,94,0.3);
+    border-radius: var(--radius);
+    color: var(--red);
+    font-size: 12px; font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, border-color .15s;
+  }
+  .btn-reset-filters:hover { background: rgba(244,63,94,0.18); border-color: rgba(244,63,94,0.5); }
 
   /* ── GRID ── */
   .grid {
@@ -265,7 +278,9 @@
     background: rgba(0,0,0,0.55);
     color: #fff;
     border: 1px solid var(--card-mfr-border, rgba(255,255,255,0.2));
+    transition: transform .12s, background .12s;
   }
+  .card-mfr-badge:hover { transform: scale(1.06); background: rgba(0,0,0,0.75); }
 
   /* top-right: series code */
   .card-code-badge {
@@ -277,7 +292,9 @@
     color: #7dd3fc;
     border: 1px solid rgba(0,170,255,0.4);
     backdrop-filter: blur(12px);
+    transition: transform .12s, background .12s;
   }
+  .card-code-badge:hover { transform: scale(1.06); background: rgba(0,0,0,0.75); }
   .card-code-badge.premium  { color: #fcd34d; border-color: rgba(252,211,77,0.5); }
   .card-code-badge.mainline { color: #94a3b8; border-color: rgba(148,163,184,0.4); }
 
@@ -300,7 +317,9 @@
     background: rgba(255,255,255,0.07);
     border: 1px solid rgba(255,255,255,0.1);
     color: var(--brand-color, var(--text2));
+    transition: transform .12s, background .12s;
   }
+  .brand-pill:hover { transform: scale(1.06); background: rgba(255,255,255,0.15); }
 
   .custom-plate-badge {
     display: inline-block; font-size: 10px; padding: 2px 7px;
@@ -450,24 +469,24 @@
     border-radius: var(--radius-sm); padding: 8px 12px;
     text-align: center;
     position: relative;
-  }
-  .measure:hover .copy-val-btn { opacity: 1; }
-  .copy-val-btn {
-    position: absolute;
-    top: 5px; right: 5px;
-    width: 20px; height: 20px;
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 5px;
-    color: var(--text3);
     cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0;
-    transition: opacity .15s, color .15s, background .15s;
-    padding: 0;
+    overflow: hidden;
   }
-  .copy-val-btn:hover { color: var(--accent); background: var(--surface2); }
-  .copy-val-btn.copied { color: var(--green); opacity: 1; }
+  .measure-copy-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px;
+    background: rgba(34,38,58,0.75);
+    backdrop-filter: blur(4px);
+    border-radius: var(--radius-sm);
+    opacity: 0;
+    transition: opacity .15s;
+    font-size: 11px; font-weight: 600;
+    color: var(--accent);
+    pointer-events: none;
+  }
+  .measure:hover .measure-copy-overlay { opacity: 1; }
+  .measure-copy-overlay.copied { opacity: 1; color: var(--green); background: rgba(62,207,142,0.15); }
   .measure.front { border-left: 2px solid var(--accent); }
   .measure.rear  { border-left: 2px solid var(--accent2); }
   .measure.wb    { grid-column: span 2; border-left: 2px solid var(--green); }
@@ -664,7 +683,10 @@
     </button>
     <div class="cs-menu" id="dd-brand-menu"></div>
   </div>
-  <div class="filter-count" id="filter-count">0 cars</div>
+  <button class="btn-reset-filters" id="btn-reset-filters" onclick="resetFilters()" style="display:none" title="Clear all filters">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    Reset
+  </button>
 </div>
 
 <div class="grid" id="grid"></div>
@@ -990,54 +1012,61 @@ function openModal(id) {
   // measures
   const m = car.measurements;
   document.getElementById("modal-measures").innerHTML = `
-    <div class="measure wb">
-      <button class="copy-val-btn" onclick="copyVal(${m.wheelbase},'wb')" title="Copy">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      </button>
+    <div class="measure wb" onclick="copyVal(${m.wheelbase},this)">
       <div class="measure-label">Wheelbase</div>
       <div class="measure-val">${m.wheelbase}<span class="unit">mm</span></div>
+      <div class="measure-copy-overlay">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Click to copy
+      </div>
     </div>
-    <div class="measure front">
-      <button class="copy-val-btn" onclick="copyVal(${m.front_wheel_diameter},'fd')" title="Copy">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      </button>
+    <div class="measure front" onclick="copyVal(${m.front_wheel_diameter},this)">
       <div class="measure-label">Front Diameter</div>
       <div class="measure-val">${m.front_wheel_diameter}<span class="unit">mm</span></div>
+      <div class="measure-copy-overlay">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Click to copy
+      </div>
     </div>
-    <div class="measure rear">
-      <button class="copy-val-btn" onclick="copyVal(${m.rear_wheel_diameter},'rd')" title="Copy">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      </button>
+    <div class="measure rear" onclick="copyVal(${m.rear_wheel_diameter},this)">
       <div class="measure-label">Rear Diameter</div>
       <div class="measure-val">${m.rear_wheel_diameter}<span class="unit">mm</span></div>
+      <div class="measure-copy-overlay">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Click to copy
+      </div>
     </div>
-    <div class="measure front">
-      <button class="copy-val-btn" onclick="copyVal(${m.front_wheel_width},'fw')" title="Copy">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      </button>
+    <div class="measure front" onclick="copyVal(${m.front_wheel_width},this)">
       <div class="measure-label">Front Width</div>
       <div class="measure-val">${m.front_wheel_width}<span class="unit">mm</span></div>
+      <div class="measure-copy-overlay">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Click to copy
+      </div>
     </div>
-    <div class="measure rear">
-      <button class="copy-val-btn" onclick="copyVal(${m.rear_wheel_width},'rw')" title="Copy">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      </button>
+    <div class="measure rear" onclick="copyVal(${m.rear_wheel_width},this)">
       <div class="measure-label">Rear Width</div>
       <div class="measure-val">${m.rear_wheel_width}<span class="unit">mm</span></div>
+      <div class="measure-copy-overlay">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Click to copy
+      </div>
     </div>
-    <div class="measure front">
-      <button class="copy-val-btn" onclick="copyVal(${m.front_wheels_inner_distance},'fi')" title="Copy">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      </button>
+    <div class="measure front" onclick="copyVal(${m.front_wheels_inner_distance},this)">
       <div class="measure-label">Front Inner Gap</div>
       <div class="measure-val">${m.front_wheels_inner_distance}<span class="unit">mm</span></div>
+      <div class="measure-copy-overlay">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Click to copy
+      </div>
     </div>
-    <div class="measure rear">
-      <button class="copy-val-btn" onclick="copyVal(${m.rear_wheels_inner_distance},'ri')" title="Copy">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      </button>
+    <div class="measure rear" onclick="copyVal(${m.rear_wheels_inner_distance},this)">
       <div class="measure-label">Rear Inner Gap</div>
       <div class="measure-val">${m.rear_wheels_inner_distance}<span class="unit">mm</span></div>
+      <div class="measure-copy-overlay">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Click to copy
+      </div>
     </div>`;
 
   document.getElementById("modal-overlay").classList.add("open");
@@ -1061,17 +1090,18 @@ function closeModalDirect() {
   document.body.style.overflow = "";
 }
 
-function copyVal(val, key) {
+function copyVal(val, el) {
   navigator.clipboard.writeText(String(val));
   showToast(`Copied: ${val} mm`);
-  const btn = document.querySelector(`.copy-val-btn[onclick*="'${key}'"]`);
-  if (btn) {
-    btn.classList.add('copied');
-    btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>`;
+  const overlay = el.querySelector('.measure-copy-overlay');
+  if (overlay) {
+    const original = overlay.innerHTML;
+    overlay.classList.add('copied');
+    overlay.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Copied!`;
     setTimeout(() => {
-      btn.classList.remove('copied');
-      btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
-    }, 1800);
+      overlay.classList.remove('copied');
+      overlay.innerHTML = original;
+    }, 1200);
   }
 }
 
@@ -1178,14 +1208,14 @@ function renderCard(car) {
     ? `<img src="${car.image}" alt="${car.name}" loading="lazy">`
     : `<div class="placeholder"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3m0 0h3l3 3v4h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg><span>No image</span></div>`;
 
-  let badgesHtml = `<span class="brand-pill" style="color:${bc};border-color:${hex2rgba(bc,0.3)};background:rgba(0,0,0,0.5)">${car.carBrand}</span>`;
+  let badgesHtml = `<span class="brand-pill" style="color:${bc};border-color:${hex2rgba(bc,0.3)};background:rgba(0,0,0,0.5);cursor:pointer" onclick="setBrandFilter(event,'${car.carBrand.replace(/'/g, "\\'")}')">${car.carBrand}</span>`;
   if (car.customPlate) badgesHtml += `<span class="custom-plate-badge">Custom Plate</span>`;
 
   return `<div class="card" data-id="${car.id}" style="--mfr-color:${mc}" onclick="openModal(${car.id})">
     <div class="card-img" >
       ${imgHtml}
-      <div class="card-mfr-badge" style="border-color:${hex2rgba(mc,0.7)}">${car.manufacturer}</div>
-      ${car.code ? `<div class="card-code-badge ${car.code === 'Premium' ? 'premium' : car.code === 'Mainline' ? 'mainline' : ''}">${isNaN(car.code) ? car.code : '#'+car.code}</div>` : ''}
+      <div class="card-mfr-badge" style="border-color:${hex2rgba(mc,0.7)};cursor:pointer" onclick="setMfrFilter(event,'${car.manufacturer.replace(/'/g, "\\'")}')">${car.manufacturer}</div>
+      ${car.code ? `<div class="card-code-badge ${car.code === 'Premium' ? 'premium' : car.code === 'Mainline' ? 'mainline' : ''}" style="cursor:pointer" onclick="setCodeFilter(event,'${String(car.code).replace(/'/g, "\\'")}')">${isNaN(car.code) ? car.code : '#'+car.code}</div>` : ''}
       <div class="card-img-title">${car.name}</div>
       <div class="card-img-badges">${badgesHtml}</div>
     </div>
@@ -1197,6 +1227,32 @@ function renderCard(car) {
 // ============================================================
 let filterMfr = '';
 let filterBrand = '';
+
+function setMfrFilter(e, val) {
+  e.stopPropagation();
+  filterMfr = val;
+  document.getElementById('dd-mfr-label').textContent = val;
+  document.querySelectorAll('#dd-mfr-menu .cs-option').forEach(b => b.classList.toggle('active', b.textContent === val));
+  renderGrid();
+  document.getElementById('grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function setBrandFilter(e, val) {
+  e.stopPropagation();
+  filterBrand = val;
+  document.getElementById('dd-brand-label').textContent = val;
+  document.querySelectorAll('#dd-brand-menu .cs-option').forEach(b => b.classList.toggle('active', b.textContent === val));
+  renderGrid();
+  document.getElementById('grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function setCodeFilter(e, val) {
+  e.stopPropagation();
+  const search = document.getElementById('search');
+  search.value = val;
+  renderGrid();
+  document.getElementById('grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 function buildDropdown(ddId, menuId, labelId, items, allLabel, onSelect) {
   const menu = document.getElementById(menuId);
@@ -1264,17 +1320,32 @@ document.addEventListener("keydown", e => {
 function renderGrid() {
   const q = document.getElementById("search").value.toLowerCase();
   const filtered = CARS.filter(c => {
-    const matchQ = !q || c.name.toLowerCase().includes(q) || c.manufacturer.toLowerCase().includes(q) || c.carBrand.toLowerCase().includes(q) || (c.minigtCode && c.minigtCode.includes(q));
+    const matchQ = !q || c.name.toLowerCase().includes(q) || c.manufacturer.toLowerCase().includes(q) || c.carBrand.toLowerCase().includes(q) || (c.code && String(c.code).toLowerCase().includes(q));
     return matchQ && (!filterMfr || c.manufacturer===filterMfr) && (!filterBrand || c.carBrand===filterBrand);
   }).sort((a, b) => a.name.localeCompare(b.name));
 
-  document.getElementById("filter-count").textContent = `${filtered.length} car${filtered.length!==1?'s':''}`;
+  // show/hide reset button
+  const resetBtn = document.getElementById('btn-reset-filters');
+  const hasActiveFilter = q || filterMfr || filterBrand;
+  resetBtn.style.display = hasActiveFilter ? 'flex' : 'none';
+
   const grid = document.getElementById("grid");
   if (!filtered.length) {
     grid.innerHTML = `<div class="empty"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><p>No cars found. Try adjusting your filters.</p></div>`;
     return;
   }
   grid.innerHTML = filtered.map(renderCard).join("");
+}
+
+function resetFilters() {
+  document.getElementById('search').value = '';
+  filterMfr = '';
+  filterBrand = '';
+  document.getElementById('dd-mfr-label').textContent = 'All manufacturers';
+  document.getElementById('dd-brand-label').textContent = 'All car brands';
+  document.querySelectorAll('#dd-mfr-menu .cs-option').forEach(b => b.classList.toggle('active', b.textContent === 'All manufacturers'));
+  document.querySelectorAll('#dd-brand-menu .cs-option').forEach(b => b.classList.toggle('active', b.textContent === 'All car brands'));
+  renderGrid();
 }
 </script>
 </body>
